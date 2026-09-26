@@ -1,0 +1,1424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}</style>
+<title>ITE Math Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --bg:#F1F2EE; --surface:#FFFFFF; --sunk:#E8EAE4; --ink:#161B21; --muted:#59616B; --line:#D3D6CE; --grid:#E6E8E2;
+  --accent:#2747C2; --accent-soft:#DFE5FA; --on-accent:#FFFFFF;
+  --setA:#2F5BD8; --setB:#D5701A; --setC:#16906F; --shade:#F5CF4A;
+  --good:#1D7F48; --good-soft:#E1F2E7; --bad:#B8372F; --bad-soft:#F8E4E1;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --math:"STIX Two Text","Cambria Math","Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#101318; --surface:#181C23; --sunk:#20252E; --ink:#E7E9ED; --muted:#9AA2AD; --line:#2F3540; --grid:#222831;
+    --accent:#8FA6FF; --accent-soft:#232C4A; --on-accent:#0E1220;
+    --setA:#7C9BFF; --setB:#F29A4A; --setC:#3CC79E; --shade:#6B5A1A;
+    --good:#5BC98A; --good-soft:#15291E; --bad:#F08A80; --bad-soft:#341B19;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101318; --surface:#181C23; --sunk:#20252E; --ink:#E7E9ED; --muted:#9AA2AD; --line:#2F3540; --grid:#222831;
+  --accent:#8FA6FF; --accent-soft:#232C4A; --on-accent:#0E1220;
+  --setA:#7C9BFF; --setB:#F29A4A; --setC:#3CC79E; --shade:#6B5A1A;
+  --good:#5BC98A; --good-soft:#15291E; --bad:#F08A80; --bad-soft:#341B19;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+code{font:0.88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.math{font-family:var(--math);font-size:1.1em}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+
+.shell{max-width:1260px;margin:0 auto;padding-inline:16px;padding-block:24px 56px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:32px}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start}
+.course{font:600 11px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.brand h1{font-size:30px;font-weight:800;letter-spacing:-.01em;line-height:1.05}
+.brand .tag{color:var(--muted);font-size:13.5px;margin:10px 0 0}
+.nav{display:flex;flex-direction:column;gap:2px;margin-top:22px}
+.nav button{display:flex;align-items:center;gap:10px;padding:8px 10px;border:0;background:none;border-radius:8px;font:500 14px var(--body);text-align:left;cursor:pointer}
+.nav button:hover{background:var(--sunk)}
+.nav button[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.glyph{width:38px;flex:none;font:600 12.5px var(--mono);color:var(--accent);text-align:center}
+.nav button[aria-current="page"] .glyph{color:inherit}
+@media (max-width:880px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:18px}
+  .side{position:static}
+  .nav{flex-direction:row;overflow-x:auto;margin-inline:-16px;padding-inline:16px;padding-bottom:6px;margin-top:14px}
+  .nav button{flex:none}
+}
+
+main{min-width:0}
+.mod{display:grid;gap:16px}
+.mod-head{display:grid;gap:8px;margin-bottom:4px}
+.eyebrow{font:600 12px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:0}
+.mod-head h2{font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:-.015em;line-height:1.1}
+.lede{margin:0;max-width:66ch}
+.init{margin:4px 0 0;max-width:80ch;background:var(--sunk);border-radius:8px;padding:9px 14px;font-size:14px}
+.init b{font:600 11px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin-right:8px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.stack{display:grid;gap:14px;align-content:start}
+.work{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:16px;align-items:start}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:1040px){.work,.grid2{grid-template-columns:minmax(0,1fr)}}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.panel h3{font-size:16px;font-weight:600;margin-bottom:8px}
+.mini{font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+
+.field{display:grid;gap:5px}
+.field > label,.lbl{font:600 12px var(--body);letter-spacing:.04em;color:var(--muted);display:flex;align-items:center;gap:7px}
+.field small{color:var(--muted);font-size:12.5px}
+input[type="text"],input:not([type]),input[type="number"],select{width:100%;font:15px var(--mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px 10px}
+input.big{font-size:17px;font-family:var(--math);padding:9px 11px}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;font-style:normal}
+.dot.a{background:var(--setA)}.dot.b{background:var(--setB)}.dot.c{background:var(--setC)}
+.check{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px}
+.err{margin:0;color:var(--bad);background:var(--bad-soft);border-radius:6px;padding:6px 10px;font-size:13.5px}
+.note{margin:0;color:var(--muted);font-size:13px}
+
+.keys{display:flex;flex-wrap:wrap;gap:6px}
+.keys button{min-width:38px;height:34px;padding:0 9px;border:1px solid var(--line);border-radius:7px;background:var(--surface);font:17px var(--math);cursor:pointer}
+.keys button:hover{border-color:var(--accent);color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13.5px;cursor:pointer;white-space:nowrap}
+.chip.m{font-family:var(--math);font-size:15px}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn{border:1px solid var(--line);background:var(--sunk);border-radius:7px;padding:6px 12px;font-size:13.5px;font-weight:500;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+.canvas-wrap{position:relative;width:100%}
+canvas{display:block;border-radius:6px}
+.result{margin-top:12px;display:grid;gap:4px}
+.res-eq{margin:0;font-size:18px;overflow-wrap:anywhere}
+.res-eq .math{font-size:20px}
+.stat-list{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-variant-numeric:tabular-nums}
+.stat-list dt{font-family:var(--math);font-size:16px}
+.stat-list dd{margin:0;font-family:var(--mono)}
+.scrollbox{max-height:170px;overflow:auto;font:13.5px/1.7 var(--mono);overflow-wrap:anywhere}
+.formula{font-family:var(--math);font-size:16px;line-height:1.7;margin:0;overflow-wrap:anywhere}
+
+.table-scroll{overflow-x:auto}
+table{border-collapse:collapse}
+.tt{font-variant-numeric:tabular-nums;min-width:100%}
+.tt th{font:400 16px var(--math);padding:8px 14px;border-bottom:2px solid var(--ink);white-space:nowrap;text-align:center}
+.tt td{font:14px var(--mono);text-align:center;padding:5px 14px;border-bottom:1px solid var(--grid)}
+.tt .var{background:var(--sunk)}
+.tt .main{background:var(--accent-soft);font-weight:600}
+.tt td.T{color:var(--good)} .tt td.F{color:var(--muted)}
+.tt td.main.T{color:var(--good)}
+.verdict{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:4px 12px;font-weight:600;font-size:14px}
+.verdict.good{background:var(--good-soft);color:var(--good)}
+.verdict.bad{background:var(--bad-soft);color:var(--bad)}
+.verdict.mid{background:var(--accent-soft);color:var(--accent)}
+.ref td,.ref th{padding:7px 12px;border-bottom:1px solid var(--grid);text-align:left;font-size:14px;vertical-align:top}
+.ref th{font:600 11px var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.ref td:first-child{font:17px var(--math);white-space:nowrap}
+
+.relm th{font:600 13px var(--mono);color:var(--muted);padding:4px 6px}
+.relm td{padding:2px}
+.relcell{width:38px;height:34px;border:1px solid var(--line);background:var(--bg);border-radius:6px;font:600 14px var(--mono);color:var(--muted);cursor:pointer}
+.relcell[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+#relGraph{width:100%;max-width:440px;height:auto;display:block;margin:0 auto}
+.pairs{font:14px/1.7 var(--mono);margin:10px 0 0;overflow-wrap:anywhere}
+.props{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.prop{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:3px}
+.prop .ph{display:flex;align-items:center;gap:8px;font-weight:600}
+.tick{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;flex:none}
+.tick.y{background:var(--good-soft);color:var(--good)} .tick.n{background:var(--bad-soft);color:var(--bad)}
+.prop p{margin:0;font-size:13.5px;color:var(--muted)}
+
+.mat{display:inline-grid;grid-template-columns:repeat(var(--cols),auto);gap:2px 4px;padding:4px 10px;position:relative;font:500 15px var(--mono);font-variant-numeric:tabular-nums;vertical-align:middle}
+.mat::before,.mat::after{content:"";position:absolute;top:0;bottom:0;width:7px;border:2px solid var(--ink)}
+.mat::before{left:0;border-right:none}.mat::after{right:0;border-left:none}
+.mat .cell{min-width:2.4em;padding:4px 6px;text-align:center;border-radius:4px;border:0;background:none;font:inherit;line-height:1.3}
+.mat .cell.hl{background:var(--accent-soft)}
+.mat .cell.on{background:var(--shade)}
+.mat .cell.div{box-shadow:inset 2px 0 0 var(--muted)}
+button.cell{cursor:pointer}
+button.cell:hover{box-shadow:inset 0 0 0 1px var(--muted)}
+.mat.small{font-size:13px}
+.mat.edit{gap:6px}
+.mat.edit input{width:4.2em;text-align:center;padding:6px 4px;font-size:14.5px}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;font-size:.8em;line-height:1.05;text-align:center}
+.fr > span:first-child{border-bottom:1px solid currentColor}
+.ed-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.ed-head h3{margin:0}
+.dims{display:flex;align-items:center;gap:6px}
+.dims select{width:auto;padding:5px 8px}
+.ed-foot{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.mat-display{display:flex;flex-wrap:wrap;align-items:center;gap:14px 16px;overflow-x:auto;padding-bottom:4px}
+.matfig{margin:0;display:grid;gap:6px;justify-items:center}
+.matfig figcaption{font:600 15px var(--display)}
+.matfig figcaption small{font:12px var(--mono);color:var(--muted);margin-left:4px}
+.opsym{font:24px var(--math);color:var(--muted)}
+.scalar{font:22px var(--math)}
+.explain{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;display:grid;gap:10px}
+.explain p{margin:0}
+.eq{font-family:var(--math);font-size:17px;overflow-wrap:anywhere}
+.steps{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.steps li{display:grid;gap:6px;border-left:2px solid var(--line);padding-left:12px}
+.steps .ops{font:13.5px var(--mono);color:var(--muted);margin:0}
+.minors{display:flex;flex-wrap:wrap;gap:14px 22px}
+.minor{display:flex;align-items:center;gap:8px;font-family:var(--math)}
+.kfield{display:flex;align-items:center;gap:8px;font-family:var(--math);font-size:17px}
+.kfield input{width:90px}
+.hint{font-size:13px;color:var(--muted);margin:0}
+
+.tf-in{display:inline-grid;grid-template-columns:repeat(2,auto);gap:6px;padding:6px 12px;position:relative}
+.tf-in::before,.tf-in::after{content:"";position:absolute;top:0;bottom:0;width:8px;border:2px solid var(--ink)}
+.tf-in::before{left:0;border-right:none}.tf-in::after{right:0;border-left:none}
+.tf-in input{width:5em;text-align:center}
+.tf-in input.ci{border-color:var(--setA)} .tf-in input.cj{border-color:var(--setB)}
+input[type="range"]{width:100%;accent-color:var(--accent)}
+.readout{display:grid;gap:4px;font-size:14px}
+.readout b{font-family:var(--mono)}
+
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:6px 12px;font-size:13.5px;cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.base-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.bcard{border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:var(--surface);text-align:left;cursor:pointer;display:grid;gap:2px}
+.bcard:hover{border-color:var(--accent)}
+.bcard.src{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.bcard .bl{font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.bcard .bv{font:600 17px var(--mono);overflow-wrap:anywhere}
+.bits{display:flex;flex-wrap:wrap;gap:10px 14px}
+.byte{display:flex;gap:3px}
+.bit{display:grid;justify-items:center;gap:2px}
+.bit button{width:30px;height:36px;border:1px solid var(--line);border-radius:6px;background:var(--bg);font:600 15px var(--mono);cursor:pointer}
+.bit button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.bit span{font:10px var(--mono);color:var(--muted)}
+.divtable td,.divtable th{padding:4px 12px;font:14px var(--mono);text-align:right;border-bottom:1px solid var(--grid)}
+.divtable th{font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.divtable td.rem{color:var(--accent);font-weight:600;background:var(--accent-soft);text-align:center}
+.nibbles{display:flex;flex-wrap:wrap;gap:8px}
+.nib{border:1px solid var(--line);border-radius:7px;padding:6px 8px;display:grid;justify-items:center;gap:2px}
+.nib .nb{font:14px var(--mono);letter-spacing:.1em}
+.nib .nh{font:600 17px var(--mono);color:var(--accent)}
+.swatch{width:46px;height:46px;border-radius:8px;border:1px solid var(--line);flex:none}
+.app{display:flex;gap:12px;align-items:center}
+
+.pascal{display:grid;gap:4px;justify-content:center;min-width:max-content;padding:4px}
+.prow{display:flex;justify-content:center;gap:4px}
+.pc{min-width:40px;padding:4px 6px;border-radius:6px;border:1px solid var(--grid);background:var(--bg);font:12.5px var(--mono);text-align:center;cursor:pointer;font-variant-numeric:tabular-nums}
+.pc.on{background:var(--shade);border-color:var(--shade);font-weight:600}
+.pc.par{background:var(--accent-soft);border-color:var(--accent-soft)}
+.big-num{font:600 22px var(--mono);overflow-wrap:anywhere}
+.count-card{display:grid;gap:6px}
+.count-card .formula{font-size:15.5px}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <p class="course">Mathematical Applications for ITE</p>
+      <h1>ITE Math Lab</h1>
+      <p class="tag">Interactive visualizers for the core topics. Change any input and the picture updates.</p>
+    </div>
+    <nav class="nav" aria-label="Topics">
+      <button type="button" data-mod="sets"><span class="glyph">A∪B</span>Set Theory</button>
+      <button type="button" data-mod="logic"><span class="glyph">p∧q</span>Logic &amp; Truth Tables</button>
+      <button type="button" data-mod="relations"><span class="glyph">aRb</span>Relations &amp; Functions</button>
+      <button type="button" data-mod="matrices"><span class="glyph">[A]</span>Matrix Operations</button>
+      <button type="button" data-mod="transform"><span class="glyph">Mx</span>Matrix Transformations</button>
+      <button type="button" data-mod="numbers"><span class="glyph">1011</span>Number Systems</button>
+      <button type="button" data-mod="counting"><span class="glyph">n!</span>Counting</button>
+    </nav>
+  </aside>
+
+  <main>
+    <!-- SETS -->
+    <section class="mod" id="sets">
+      <header class="mod-head">
+        <p class="eyebrow">Set Theory</p>
+        <h2>Venn diagram playground</h2>
+        <p class="lede">A set is a collection of distinct elements. Enter the sets, then type any set expression and its region is shaded on the diagram.</p>
+        <p class="init"><b>In IT</b>SQL's <code>UNION</code>, <code>INTERSECT</code> and <code>EXCEPT</code> are ∪, ∩ and − applied to the rows of query results.</p>
+      </header>
+      <div class="work">
+        <div class="panel stack">
+          <div class="field"><label for="setU"><i class="dot" style="background:var(--muted)"></i>Universal set U</label>
+            <input id="setU" value="1..12" spellcheck="false" autocomplete="off">
+            <small>Separate elements with commas. <code>1..12</code> makes a range.</small></div>
+          <div class="field"><label for="setA"><i class="dot a"></i>Set A</label><input id="setA" value="1, 2, 3, 4, 5, 6" spellcheck="false" autocomplete="off"></div>
+          <div class="field"><label for="setB"><i class="dot b"></i>Set B</label><input id="setB" value="4, 5, 6, 7, 8" spellcheck="false" autocomplete="off"></div>
+          <label class="check"><input type="checkbox" id="useC"> Add a third set C</label>
+          <div class="field" id="fieldC" hidden><label for="setC"><i class="dot c"></i>Set C</label><input id="setC" value="2, 4, 6, 8, 10, 12" spellcheck="false" autocomplete="off"></div>
+          <div class="field"><label for="setExpr">Expression to shade</label>
+            <input id="setExpr" class="big" value="A ∩ B" spellcheck="false" autocomplete="off">
+            <div class="keys" data-target="setExpr">
+              <button type="button" data-ins=" ∪ " title="Union">∪</button><button type="button" data-ins=" ∩ " title="Intersection">∩</button><button type="button" data-ins=" − " title="Difference">−</button><button type="button" data-ins=" △ " title="Symmetric difference">△</button><button type="button" data-ins="′" title="Complement">′</button><button type="button" data-ins="(">(</button><button type="button" data-ins=")">)</button>
+            </div>
+            <small>Keyboard also works: <code>u</code> ∪, <code>n</code> ∩, <code>-</code> −, <code>^</code> △, <code>'</code> complement.</small>
+            <p class="err" id="setErr" hidden></p>
+          </div>
+          <div><p class="mini">Try one</p><div class="chips" id="setPresets"></div></div>
+        </div>
+        <div class="panel">
+          <div class="canvas-wrap"><canvas id="vennCanvas" role="img" aria-label="Venn diagram of the sets with the expression shaded"></canvas></div>
+          <div class="result" id="setResult"></div>
+        </div>
+      </div>
+      <div class="cards" id="setStats"></div>
+    </section>
+
+    <!-- LOGIC -->
+    <section class="mod" id="logic" hidden>
+      <header class="mod-head">
+        <p class="eyebrow">Propositional Logic</p>
+        <h2>Truth table generator</h2>
+        <p class="lede">A proposition is a statement that is either true or false. Combine p, q, r, s with connectives and the table lists every possible case, one column per sub-expression.</p>
+        <p class="init"><b>In IT</b>Every <code>if (loggedIn &amp;&amp; !banned)</code> is a compound proposition, and the logic gates inside a CPU compute exactly these truth tables.</p>
+      </header>
+      <div class="panel stack">
+        <div class="field"><label for="logicExpr">Compound proposition</label>
+          <input id="logicExpr" class="big" value="(p → q) ∧ (q → r) → (p → r)" spellcheck="false" autocomplete="off">
+          <div class="keys" data-target="logicExpr">
+            <button type="button" data-ins="¬" title="Not">¬</button><button type="button" data-ins=" ∧ " title="And">∧</button><button type="button" data-ins=" ∨ " title="Or">∨</button><button type="button" data-ins=" ⊕ " title="Exclusive or">⊕</button><button type="button" data-ins=" → " title="If … then">→</button><button type="button" data-ins=" ↔ " title="If and only if">↔</button><button type="button" data-ins="(">(</button><button type="button" data-ins=")">)</button>
+          </div>
+          <small>Typing works too: <code>~</code> or <code>!</code> not, <code>&amp;</code> and, <code>|</code> or, <code>-&gt;</code> implies, <code>&lt;-&gt;</code> iff, <code>xor</code>.</small>
+          <p class="err" id="logicErr" hidden></p>
+        </div>
+        <div><p class="mini">Classic forms</p><div class="chips" id="logicPresets"></div></div>
+        <div class="row" style="justify-content:space-between">
+          <div id="logicVerdict"></div>
+          <div class="seg" role="group" aria-label="Value style"><button type="button" id="tfTF" aria-pressed="true">T / F</button><button type="button" id="tf10" aria-pressed="false">1 / 0</button></div>
+        </div>
+      </div>
+      <div class="panel"><div class="table-scroll"><table class="tt" id="truthTable"></table></div></div>
+      <div class="panel">
+        <h3>Connectives</h3>
+        <div class="table-scroll"><table class="ref">
+          <thead><tr><th>Form</th><th>Name</th><th>Read as</th><th>Type</th><th>True when</th></tr></thead>
+          <tbody>
+            <tr><td>¬p</td><td>Negation</td><td>not p</td><td><code>~</code> <code>!</code> <code>not</code></td><td>p is false</td></tr>
+            <tr><td>p ∧ q</td><td>Conjunction</td><td>p and q</td><td><code>&amp;</code> <code>and</code></td><td>both are true</td></tr>
+            <tr><td>p ∨ q</td><td>Disjunction</td><td>p or q</td><td><code>|</code> <code>or</code></td><td>at least one is true</td></tr>
+            <tr><td>p ⊕ q</td><td>Exclusive or</td><td>p xor q</td><td><code>xor</code></td><td>exactly one is true</td></tr>
+            <tr><td>p → q</td><td>Conditional</td><td>if p then q</td><td><code>-&gt;</code> <code>=&gt;</code></td><td>always, except p true and q false</td></tr>
+            <tr><td>p ↔ q</td><td>Biconditional</td><td>p if and only if q</td><td><code>&lt;-&gt;</code> <code>iff</code></td><td>p and q have the same value</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- RELATIONS -->
+    <section class="mod" id="relations" hidden>
+      <header class="mod-head">
+        <p class="eyebrow">Relations &amp; Functions</p>
+        <h2>Relation explorer</h2>
+        <p class="lede">A relation R on a set A is a set of ordered pairs (a, b) taken from A × A. Click the matrix to add or remove pairs and the digraph and properties update.</p>
+        <p class="init"><b>In IT</b>A table in a relational database is a relation: each row is an ordered tuple. Partial orders schedule tasks with dependencies; equivalence relations group matching records.</p>
+      </header>
+      <div class="work">
+        <div class="panel stack">
+          <div class="field"><label for="relSet">Set A</label><input id="relSet" value="1, 2, 3, 4, 6" spellcheck="false" autocomplete="off"><small>Up to 7 elements.</small></div>
+          <div><p class="mini">Fill R with a rule</p><div class="chips" id="relPresets"></div></div>
+          <div>
+            <p class="mini">Relation matrix M<sub>R</sub></p>
+            <div class="table-scroll"><table class="relm" id="relMatrix"></table></div>
+            <p class="hint" style="margin-top:6px">Row = a, column = b. A filled cell means (a, b) ∈ R.</p>
+          </div>
+          <div><p class="mini">Closures</p>
+            <div class="row"><button type="button" class="btn" data-clos="r">Reflexive</button><button type="button" class="btn" data-clos="s">Symmetric</button><button type="button" class="btn" data-clos="t">Transitive</button><button type="button" class="btn" data-clos="x">Clear</button></div>
+          </div>
+        </div>
+        <div class="panel">
+          <svg id="relGraph" viewBox="0 0 340 300" role="img" aria-label="Directed graph of the relation"></svg>
+          <p class="pairs" id="relPairs"></p>
+        </div>
+      </div>
+      <div class="panel"><h3>Properties</h3><div class="props" id="relProps"></div></div>
+    </section>
+
+    <!-- MATRICES -->
+    <section class="mod" id="matrices" hidden>
+      <header class="mod-head">
+        <p class="eyebrow">Matrices</p>
+        <h2>Matrix calculator</h2>
+        <p class="lede">Enter two matrices and pick an operation. Click any cell of the answer to see exactly how it was computed. Fractions like <code>1/2</code> and decimals work, and answers stay exact.</p>
+        <p class="init"><b>In IT</b>Digital images are matrices of pixel values, neural networks multiply matrices of weights, and 3D engines move every vertex with a matrix product.</p>
+      </header>
+      <div class="grid2">
+        <div class="panel" id="edA"></div>
+        <div class="panel" id="edB"></div>
+      </div>
+      <div class="panel stack">
+        <div class="chips" id="matOps"></div>
+        <div class="kfield" id="kField" hidden><label for="matK">k =</label><input id="matK" value="3" autocomplete="off"></div>
+      </div>
+      <div class="panel">
+        <div class="mat-display" id="matDisplay"></div>
+        <div class="explain" id="matExplain"></div>
+      </div>
+    </section>
+
+    <!-- TRANSFORM -->
+    <section class="mod" id="transform" hidden>
+      <header class="mod-head">
+        <p class="eyebrow">Matrices in Graphics</p>
+        <h2>2×2 transformations</h2>
+        <p class="lede">A 2×2 matrix moves every point of the plane. Its first column is where î = (1, 0) lands and its second column is where ĵ = (0, 1) lands. The determinant is how much areas are scaled.</p>
+        <p class="init"><b>In IT</b>Rotating a phone screen, resizing an image or skewing text with CSS <code>transform: matrix()</code> all come down to this multiplication.</p>
+      </header>
+      <div class="work">
+        <div class="panel stack">
+          <div>
+            <p class="mini">Matrix M</p>
+            <div class="tf-in">
+              <input id="tf-a" class="ci" value="1" aria-label="a, row 1 column 1" autocomplete="off"><input id="tf-b" class="cj" value="1" aria-label="b, row 1 column 2" autocomplete="off">
+              <input id="tf-c" class="ci" value="0" aria-label="c, row 2 column 1" autocomplete="off"><input id="tf-d" class="cj" value="1" aria-label="d, row 2 column 2" autocomplete="off">
+            </div>
+          </div>
+          <div><p class="mini">Presets</p><div class="chips" id="tfPresets"></div></div>
+          <div class="field"><label for="tfT">Blend from identity: <span id="tfTval" class="mono">100%</span></label>
+            <input type="range" id="tfT" min="0" max="100" value="100">
+            <div class="row"><button type="button" class="btn primary" id="tfPlay">Play transformation</button></div>
+          </div>
+          <div class="readout" id="tfReadout"></div>
+        </div>
+        <div class="panel">
+          <div class="canvas-wrap"><canvas id="tfCanvas" role="img" aria-label="Grid and shape transformed by the matrix"></canvas></div>
+          <p class="hint" style="margin-top:8px"><span style="color:var(--setA)">■</span> î &nbsp; <span style="color:var(--setB)">■</span> ĵ &nbsp; <span style="color:var(--setC)">■</span> image of the unit square (area = |det M|) &nbsp; dashed outline = original shape</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NUMBERS -->
+    <section class="mod" id="numbers" hidden>
+      <header class="mod-head">
+        <p class="eyebrow">Number Systems</p>
+        <h2>Base converter</h2>
+        <p class="lede">Computers store everything in binary. Convert between bases and see the working you would write on paper.</p>
+        <p class="init"><b>In IT</b>Hex appears in colour codes like <code>#1E90FF</code>, memory and MAC addresses; binary in subnet masks and file permissions.</p>
+      </header>
+      <div class="panel stack">
+        <div class="row" style="align-items:end">
+          <div class="field" style="flex:1 1 220px"><label for="numIn">Number</label><input id="numIn" value="214" spellcheck="false" autocomplete="off"></div>
+          <div class="field"><span class="lbl">Written in</span>
+            <div class="seg" role="group" aria-label="Input base" id="numBase"><button type="button" data-b="2">Base 2</button><button type="button" data-b="8">Base 8</button><button type="button" data-b="10">Base 10</button><button type="button" data-b="16">Base 16</button></div>
+          </div>
+        </div>
+        <p class="err" id="numErr" hidden></p>
+        <div class="base-cards" id="numCards"></div>
+      </div>
+      <div class="panel"><h3>Bits</h3><p class="hint" style="margin-bottom:10px">Click a bit to flip it. Each position is worth a power of 2.</p><div id="numBits"></div></div>
+      <div class="grid2">
+        <div class="panel"><h3>To decimal: positional expansion</h3><div id="numExpand"></div></div>
+        <div class="panel">
+          <div class="row" style="justify-content:space-between;margin-bottom:8px"><h3 style="margin:0">From decimal: repeated division</h3>
+            <div class="seg" role="group" aria-label="Target base" id="numTarget"><button type="button" data-b="2">2</button><button type="button" data-b="8">8</button><button type="button" data-b="16">16</button></div></div>
+          <div id="numDivide"></div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="panel"><h3>Binary ↔ hex shortcut</h3><p class="hint" style="margin-bottom:10px">Every group of 4 bits is exactly one hex digit.</p><div id="numNibbles"></div></div>
+        <div class="panel"><h3>Where this number shows up</h3><div class="stack" id="numApps"></div></div>
+      </div>
+    </section>
+
+    <!-- COUNTING -->
+    <section class="mod" id="counting" hidden>
+      <header class="mod-head">
+        <p class="eyebrow">Counting Principles</p>
+        <h2>Permutations &amp; combinations</h2>
+        <p class="lede">Count arrangements without listing them. Order matters for permutations and doesn't for combinations.</p>
+        <p class="init"><b>In IT</b>Counting tells you how many passwords, IP addresses or test cases exist before you try to go through them.</p>
+      </header>
+      <div class="panel stack">
+        <div class="row">
+          <div class="field" style="width:130px"><label for="cN">n (items)</label><input type="number" id="cN" min="0" max="60" value="5"></div>
+          <div class="field" style="width:130px"><label for="cR">r (chosen)</label><input type="number" id="cR" min="0" max="60" value="3"></div>
+        </div>
+        <p class="err" id="cErr" hidden></p>
+      </div>
+      <div class="cards" id="cCards"></div>
+      <div class="panel"><h3>Pascal's triangle</h3><p class="hint" style="margin-bottom:10px">Row n, position r holds C(n, r). Each entry is the sum of the two above it. Click an entry to select it.</p><div class="table-scroll"><div class="pascal" id="pascal"></div></div></div>
+      <div class="panel stack">
+        <h3 style="margin:0">Password space (multiplication rule)</h3>
+        <div class="row">
+          <label class="check"><input type="checkbox" id="pwL" checked> a–z (26)</label>
+          <label class="check"><input type="checkbox" id="pwU" checked> A–Z (26)</label>
+          <label class="check"><input type="checkbox" id="pwD" checked> 0–9 (10)</label>
+          <label class="check"><input type="checkbox" id="pwS"> symbols (32)</label>
+        </div>
+        <div class="field"><label for="pwLen">Length: <span class="mono" id="pwLenV">8</span></label><input type="range" id="pwLen" min="4" max="20" value="8"></div>
+        <div id="pwOut"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const tok=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+const sup=n=>String(n).split('').map(c=>c==='-'?'⁻':SUP[+c]).join('');
+
+function sizeCanvas(cv,h){
+  const w=Math.max(260,cv.parentElement.clientWidth);
+  const dpr=window.devicePixelRatio||1;
+  cv.style.width=w+'px'; cv.style.height=h+'px';
+  cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+  const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w,h,dpr};
+}
+function hexRgb(c){
+  c=c.replace('#','');
+  if(c.length===3) c=c.split('').map(x=>x+x).join('');
+  return [parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)];
+}
+function redrawAll(){ drawVenn(); drawTF(); }
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',redrawAll);
+new MutationObserver(redrawAll).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+let rz; window.addEventListener('resize',()=>{clearTimeout(rz); rz=setTimeout(redrawAll,120);});
+
+/* ---------- navigation ---------- */
+const mods=$$('.mod'), navBtns=$$('.nav button');
+function show(id){
+  if(!document.getElementById(id)||!mods.some(m=>m.id===id)) id='sets';
+  mods.forEach(m=>m.hidden=m.id!==id);
+  navBtns.forEach(b=>b.setAttribute('aria-current',b.dataset.mod===id?'page':'false'));
+  try{localStorage.setItem('itemath-mod',id);}catch(e){}
+  redrawAll();
+}
+navBtns.forEach(b=>b.addEventListener('click',()=>{
+  show(b.dataset.mod);
+  try{history.replaceState(null,'','#'+b.dataset.mod);}catch(e){}
+  if(window.innerWidth<=880) $('main').scrollIntoView({block:'start',behavior:reduceMotion?'auto':'smooth'});
+}));
+
+/* symbol keypads */
+$$('.keys').forEach(k=>k.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-ins]'); if(!b) return;
+  const inp=document.getElementById(k.dataset.target);
+  const s=inp.selectionStart??inp.value.length, en=inp.selectionEnd??s;
+  inp.value=inp.value.slice(0,s)+b.dataset.ins+inp.value.slice(en);
+  const p=s+b.dataset.ins.length; inp.focus(); inp.setSelectionRange(p,p);
+  inp.dispatchEvent(new Event('input'));
+}));
+
+/* ======================= SETS ======================= */
+function parseSetList(str){
+  const out=[];
+  str.replace(/[{}]/g,' ').split(/[,\s]+/).forEach(t=>{
+    if(!t) return;
+    const m=t.match(/^(-?\d+)\.\.(-?\d+)$/);
+    if(m){ const a=+m[1], b=+m[2]; if(Math.abs(b-a)<=80){ const s=a<=b?1:-1; for(let i=a;i!==b+s;i+=s) out.push(String(i)); } return; }
+    out.push(t);
+  });
+  return [...new Set(out)];
+}
+const isNum=x=>/^-?\d+(\.\d+)?$/.test(x);
+function sortEls(arr){ return arr.every(isNum)?[...arr].sort((a,b)=>a-b):arr; }
+const fmtSet=arr=>arr.length?'{'+arr.join(', ')+'}':'∅';
+
+function tokenizeSet(s){
+  const t=[]; let i=0;
+  const words={u:'∪',union:'∪',or:'∪',n:'∩',intersect:'∩',and:'∩',minus:'−',diff:'−',xor:'△',not:'¬'};
+  while(i<s.length){
+    const c=s[i];
+    if(/\s/.test(c)){i++;continue;}
+    if(/[A-Za-z]/.test(c)){
+      let w=''; while(i<s.length&&/[A-Za-z]/.test(s[i])) w+=s[i++];
+      if(/^[ABCU]$/.test(w)) t.push({k:'set',v:w});
+      else if(/^[abc]$/.test(w)) t.push({k:'set',v:w.toUpperCase()});
+      else if(words[w.toLowerCase()]) t.push({k:'op',v:words[w.toLowerCase()]});
+      else throw new Error(`"${w}" isn't a set name. Use A, B, C or U.`);
+      continue;
+    }
+    i++;
+    if('∪|+'.includes(c)) t.push({k:'op',v:'∪'});
+    else if('∩&*'.includes(c)) t.push({k:'op',v:'∩'});
+    else if('−-\\'.includes(c)) t.push({k:'op',v:'−'});
+    else if('△Δ^⊕'.includes(c)) t.push({k:'op',v:'△'});
+    else if("'′’ᶜ".includes(c)) t.push({k:'op',v:"'"});
+    else if('¬~!'.includes(c)) t.push({k:'op',v:'¬'});
+    else if(c==='('||c===')') t.push({k:'op',v:c});
+    else throw new Error(`"${c}" isn't a set operator.`);
+  }
+  return t;
+}
+function parseSetExpr(str){
+  const t=tokenizeSet(str); let p=0;
+  const peek=()=>t[p], eat=()=>t[p++];
+  const isOp=(v)=>peek()&&peek().k==='op'&&v.includes(peek().v);
+  function expr(){ let l=term(); while(isOp('∪−△')){ const o=eat().v; l={op:o,l,r:term()}; } return l; }
+  function term(){ let l=unary(); while(isOp('∩')){ eat(); l={op:'∩',l,r:unary()}; } return l; }
+  function unary(){
+    if(isOp('¬')){ eat(); return {op:"'",x:unary()}; }
+    let x=primary(); while(isOp("'")){ eat(); x={op:"'",x}; } return x;
+  }
+  function primary(){
+    const k=eat();
+    if(!k) throw new Error('The expression ends too early. Add a set after the last operator.');
+    if(k.k==='set') return {set:k.v};
+    if(k.v==='('){ const e=expr(); const c=eat(); if(!c||c.v!==')') throw new Error('A closing parenthesis ")" is missing.'); return e; }
+    throw new Error(`"${k.v==="'"?'′':k.v}" needs a set before it.`);
+  }
+  if(!t.length) throw new Error('Type an expression, for example A ∩ B.');
+  const e=expr();
+  if(p<t.length) throw new Error(`Unexpected "${t[p].v}". Check for a missing operator.`);
+  return e;
+}
+function evS(n,m){
+  if(n.set) return m[n.set];
+  switch(n.op){
+    case "'": return !evS(n.x,m);
+    case '∪': return evS(n.l,m)||evS(n.r,m);
+    case '∩': return evS(n.l,m)&&evS(n.r,m);
+    case '−': return evS(n.l,m)&&!evS(n.r,m);
+    case '△': return evS(n.l,m)!==evS(n.r,m);
+  }
+}
+function strS(n,top=true){
+  if(n.set) return n.set;
+  if(n.op==="'") return (n.x.set?n.x.set:'('+strS(n.x,true)+')')+'′';
+  const s=strS(n.l,false)+' '+n.op+' '+strS(n.r,false);
+  return top?s:'('+s+')';
+}
+function usesC(n){ if(n.set) return n.set==='C'; return n.x?usesC(n.x):(usesC(n.l)||usesC(n.r)); }
+
+const S={three:false};
+const setPresets2=['A ∪ B','A ∩ B','A − B','B − A','A △ B','A′','(A ∪ B)′','A′ ∩ B′'];
+const setPresets3=['A ∩ B ∩ C','A ∪ B ∪ C','(A ∩ B) − C','A ∩ (B ∪ C)','(A ∪ B) ∩ C′','A − (B ∪ C)'];
+function renderSetPresets(){
+  const list=S.three?[...setPresets3,...setPresets2.slice(0,5)]:setPresets2;
+  $('#setPresets').innerHTML=list.map(p=>`<button type="button" class="chip m" data-e="${p}">${p}</button>`).join('');
+}
+$('#setPresets').addEventListener('click',e=>{const b=e.target.closest('[data-e]'); if(!b) return; $('#setExpr').value=b.dataset.e; setsUpdate();});
+$('#useC').addEventListener('change',e=>{ S.three=e.target.checked; $('#fieldC').hidden=!S.three; renderSetPresets(); setsUpdate(); });
+['setU','setA','setB','setC','setExpr'].forEach(id=>$('#'+id).addEventListener('input',setsUpdate));
+
+function setsUpdate(){
+  let U=parseSetList($('#setU').value);
+  const A=parseSetList($('#setA').value), B=parseSetList($('#setB').value), C=S.three?parseSetList($('#setC').value):[];
+  const extra=[...new Set([...A,...B,...C].filter(x=>!U.includes(x)))];
+  U=sortEls([...U,...extra]);
+  S.U=U; S.A=new Set(A); S.B=new Set(B); S.C=new Set(C);
+  let err='';
+  try{
+    const ast=parseSetExpr($('#setExpr').value);
+    if(!S.three&&usesC(ast)) throw new Error('This expression uses C. Tick "Add a third set C" first.');
+    S.ast=ast;
+  }catch(e){ S.ast=null; err=e.message; }
+  $('#setErr').hidden=!err; $('#setErr').textContent=err;
+
+  const mem=x=>({A:S.A.has(x),B:S.B.has(x),C:S.C.has(x),U:true});
+  let html='';
+  if(S.ast){
+    const res=U.filter(x=>evS(S.ast,mem(x)));
+    html+=`<p class="res-eq"><span class="math">${esc(strS(S.ast))}</span> = <span class="mono">${esc(fmtSet(res))}</span></p>`;
+    html+=`<p class="note">n(${esc(strS(S.ast))}) = ${res.length}, out of ${U.length} elements in U.</p>`;
+  }
+  if(extra.length) html+=`<p class="note">Added ${esc(extra.join(', '))} to U, because every set must be a subset of the universal set.</p>`;
+  $('#setResult').innerHTML=html;
+  renderSetStats();
+  drawVenn();
+}
+function renderSetStats(){
+  const U=S.U, A=U.filter(x=>S.A.has(x)), B=U.filter(x=>S.B.has(x)), C=U.filter(x=>S.C.has(x));
+  const AB=A.filter(x=>S.B.has(x)), AuB=U.filter(x=>S.A.has(x)||S.B.has(x));
+  let cards=[];
+  let card='<div class="panel"><h3>Cardinality</h3><dl class="stat-list">';
+  card+=`<dt>n(U)</dt><dd>${U.length}</dd><dt>n(A)</dt><dd>${A.length}</dd><dt>n(B)</dt><dd>${B.length}</dd>`;
+  if(S.three) card+=`<dt>n(C)</dt><dd>${C.length}</dd>`;
+  card+=`<dt>n(A′)</dt><dd>${U.length-A.length}</dd></dl></div>`;
+  cards.push(card);
+  if(!S.three){
+    cards.push(`<div class="panel"><h3>Inclusion–exclusion</h3><p class="formula">n(A ∪ B) = n(A) + n(B) − n(A ∩ B)<br>= ${A.length} + ${B.length} − ${AB.length} = <b>${AuB.length}</b></p><p class="hint" style="margin-top:6px">Subtracting n(A ∩ B) stops the overlap being counted twice.</p></div>`);
+  }else{
+    const AC=A.filter(x=>S.C.has(x)).length, BC=B.filter(x=>S.C.has(x)).length, ABC=AB.filter(x=>S.C.has(x)).length;
+    const all=U.filter(x=>S.A.has(x)||S.B.has(x)||S.C.has(x)).length;
+    cards.push(`<div class="panel"><h3>Inclusion–exclusion</h3><p class="formula">n(A ∪ B ∪ C) = n(A) + n(B) + n(C) − n(A∩B) − n(A∩C) − n(B∩C) + n(A∩B∩C)<br>= ${A.length} + ${B.length} + ${C.length} − ${AB.length} − ${AC} − ${BC} + ${ABC} = <b>${all}</b></p></div>`);
+  }
+  // power set
+  let ps;
+  if(A.length<=4){
+    const subs=[];
+    for(let m=0;m<(1<<A.length);m++){ subs.push(fmtSet(A.filter((_,i)=>m&(1<<i)))); }
+    subs.sort((a,b)=>a.length-b.length);
+    ps=`<div class="scrollbox">${esc(subs.join(', '))}</div>`;
+  }else ps=`<p class="hint">Listing is hidden when A has more than 4 elements. Remove some elements from A to see every subset.</p>`;
+  cards.push(`<div class="panel"><h3>Power set 𝒫(A)</h3><p class="formula" style="margin-bottom:6px">n(𝒫(A)) = 2<sup>${A.length}</sup> = <b>${2**A.length}</b></p>${ps}</div>`);
+  // cartesian
+  const pairs=[]; A.forEach(a=>B.forEach(b=>pairs.push(`(${a}, ${b})`)));
+  const shown=pairs.slice(0,30);
+  cards.push(`<div class="panel"><h3>Cartesian product A × B</h3><p class="formula" style="margin-bottom:6px">n(A × B) = ${A.length} × ${B.length} = <b>${pairs.length}</b></p><div class="scrollbox">${esc(shown.join(', '))}${pairs.length>30?' …':''}</div></div>`);
+  $('#setStats').innerHTML=cards.join('');
+}
+
+function vennGeom(w,h,three){
+  const pad=10, rect={x:pad,y:pad,w:w-2*pad,h:h-2*pad};
+  if(!three){
+    const r=Math.min((w-60)/3.1,(h-60)/2), s=r*1.1, cx=w/2, cy=h/2+4;
+    return {rect,c:[{x:cx-s/2,y:cy,r},{x:cx+s/2,y:cy,r}]};
+  }
+  const r=Math.min((w-50)/3.05,(h-40)/2.95), s=r*1.05, cx=w/2, cy=h/2-0.1443*s+2;
+  return {rect,c:[{x:cx-s/2,y:cy-s*0.2887,r},{x:cx+s/2,y:cy-s*0.2887,r},{x:cx,y:cy+s*0.5774,r}]};
+}
+function drawVenn(){
+  const cv=$('#vennCanvas'); if(!cv||cv.offsetParent===null||!S.U) return;
+  const {ctx,w,h,dpr}=sizeCanvas(cv,360);
+  const g=vennGeom(w,h,S.three);
+  const surface=tok('--surface'), ink=tok('--ink'), muted=tok('--muted'), line=tok('--line');
+  const cols=[tok('--setA'),tok('--setB'),tok('--setC')];
+  ctx.fillStyle=surface; ctx.fillRect(0,0,w,h);
+  if(S.ast){
+    const tbl=[];
+    for(let k=0;k<8;k++) tbl[k]=evS(S.ast,{A:!!(k&1),B:!!(k&2),C:!!(k&4),U:true});
+    const W=cv.width,H=cv.height, img=ctx.getImageData(0,0,W,H), d=img.data;
+    const [sr,sg,sb]=hexRgb(tok('--shade'));
+    const x0=Math.ceil(g.rect.x*dpr), x1=Math.floor((g.rect.x+g.rect.w)*dpr), y0=Math.ceil(g.rect.y*dpr), y1=Math.floor((g.rect.y+g.rect.h)*dpr);
+    const cc=g.c.map(c=>({x:c.x*dpr,y:c.y*dpr,r2:(c.r*dpr)**2}));
+    for(let py=y0;py<y1;py++){
+      for(let px=x0;px<x1;px++){
+        let k=0;
+        for(let i=0;i<cc.length;i++){ const dx=px-cc[i].x, dy=py-cc[i].y; if(dx*dx+dy*dy<=cc[i].r2) k|=(1<<i); }
+        if(tbl[k]){ const o=(py*W+px)*4; d[o]=sr; d[o+1]=sg; d[o+2]=sb; d[o+3]=255; }
+      }
+    }
+    ctx.putImageData(img,0,0);
+  }
+  ctx.lineWidth=1.5; ctx.strokeStyle=line; ctx.strokeRect(g.rect.x,g.rect.y,g.rect.w,g.rect.h);
+  ctx.fillStyle=muted; ctx.font='600 15px "Bricolage Grotesque", system-ui, sans-serif'; ctx.textBaseline='top'; ctx.textAlign='left';
+  ctx.fillText('U',g.rect.x+8,g.rect.y+6);
+  const names=['A','B','C'];
+  const labels=g.c.map((c,i)=>{
+    const f=S.three&&i===2?{x:c.x+c.r*0.8,y:c.y+c.r*0.74}:{x:c.x+(i===0?-1:1)*c.r*0.72,y:c.y-c.r*0.74};
+    return f;
+  });
+  g.c.forEach((c,i)=>{
+    ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.strokeStyle=cols[i]; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.fillStyle=cols[i]; ctx.font='800 20px "Bricolage Grotesque", system-ui, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(names[i],labels[i].x,labels[i].y);
+  });
+  // element placement
+  const pts={}, sx=34, sy=24;
+  for(let y=g.rect.y+18;y<=g.rect.y+g.rect.h-12;y+=sy){
+    for(let x=g.rect.x+22;x<=g.rect.x+g.rect.w-20;x+=sx){
+      if(labels.some(l=>Math.abs(l.x-x)<22&&Math.abs(l.y-y)<18)) continue;
+      if(x<g.rect.x+34&&y<g.rect.y+30) continue;
+      let ok=true, key='';
+      g.c.forEach(c=>{ const dd=Math.hypot(x-c.x,y-c.y); if(Math.abs(dd-c.r)<12) ok=false; key+=dd<c.r?'1':'0'; });
+      if(ok) (pts[key]=pts[key]||[]).push({x,y});
+    }
+  }
+  Object.entries(pts).forEach(([key,arr])=>{
+    if(!key.includes('1')){ arr.sort((a,b)=>a.x-b.x||a.y-b.y); return; }
+    const mx=arr.reduce((s,p)=>s+p.x,0)/arr.length, my=arr.reduce((s,p)=>s+p.y,0)/arr.length;
+    arr.sort((a,b)=>Math.hypot(a.x-mx,a.y-my)-Math.hypot(b.x-mx,b.y-my));
+  });
+  const groups={};
+  S.U.forEach(x=>{ const key=(S.A.has(x)?'1':'0')+(S.B.has(x)?'1':'0')+(S.three?(S.C.has(x)?'1':'0'):''); (groups[key]=groups[key]||[]).push(x); });
+  ctx.fillStyle=ink; ctx.font='600 13px "JetBrains Mono", ui-monospace, monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  Object.entries(groups).forEach(([key,els])=>{
+    const p=pts[key]||[];
+    if(!p.length) return;
+    els.forEach((e,i)=>{
+      if(i>=p.length) return;
+      const overflow=els.length>p.length&&i===p.length-1;
+      const label=overflow?`+${els.length-p.length+1}`:(e.length>5?e.slice(0,4)+'…':e);
+      ctx.fillText(label,p[i].x,p[i].y);
+    });
+  });
+}
+
+/* ======================= LOGIC ======================= */
+function tokenizeLogic(s){
+  const t=[]; let i=0;
+  const sym=[['<->','↔'],['<=>','↔'],['->','→'],['=>','→'],['↔','↔'],['→','→'],['∧','∧'],['&&','∧'],['&','∧'],['∨','∨'],['||','∨'],['|','∨'],['⊕','⊕'],['¬','¬'],['~','¬'],['!','¬'],['(','('],[')',')']];
+  const words={and:'∧',or:'∨',not:'¬',xor:'⊕',implies:'→',then:'→',iff:'↔'};
+  while(i<s.length){
+    if(/\s/.test(s[i])){i++;continue;}
+    const m=sym.find(([a])=>s.startsWith(a,i));
+    if(m){ t.push(m[1]); i+=m[0].length; continue; }
+    if(/[a-zA-Z]/.test(s[i])){
+      let w=''; while(i<s.length&&/[a-zA-Z]/.test(s[i])) w+=s[i++];
+      const lw=w.toLowerCase();
+      if(words[lw]){ t.push(words[lw]); continue; }
+      if(w==='T'||w==='F'){ t.push({c:w==='T'}); continue; }
+      if(/^[a-z]$/.test(w)){ t.push({v:w}); continue; }
+      throw new Error(`"${w}" isn't a variable. Use single letters like p, q, r.`);
+    }
+    throw new Error(`"${s[i]}" isn't a logic symbol.`);
+  }
+  return t;
+}
+function parseLogic(str){
+  const t=tokenizeLogic(str); let p=0;
+  const peek=()=>t[p], is=v=>typeof t[p]==='string'&&v.includes(t[p]);
+  function iff(){ let l=imp(); while(is('↔')){ p++; l={op:'↔',l,r:imp()}; } return l; }
+  function imp(){ const l=or(); if(is('→')){ p++; return {op:'→',l,r:imp()}; } return l; }
+  function or(){ let l=and(); while(is('∨⊕')){ const o=t[p++]; l={op:o,l,r:and()}; } return l; }
+  function and(){ let l=not(); while(is('∧')){ p++; l={op:'∧',l,r:not()}; } return l; }
+  function not(){ if(is('¬')){ p++; return {op:'¬',x:not()}; } return prim(); }
+  function prim(){
+    const k=t[p++];
+    if(k===undefined) throw new Error('The expression ends too early. Add a variable after the last connective.');
+    if(typeof k==='object') return k;
+    if(k==='('){ const e=iff(); if(t[p]!==')') throw new Error('A closing parenthesis ")" is missing.'); p++; return e; }
+    throw new Error(`"${k}" needs a proposition before it.`);
+  }
+  if(!t.length) throw new Error('Type a proposition, for example p → q.');
+  const e=iff();
+  if(p<t.length) throw new Error(`Unexpected "${typeof t[p]==='string'?t[p]:(t[p].v||'')}". Check for a missing connective.`);
+  return e;
+}
+function evL(n,env){
+  if(n.v) return env[n.v];
+  if('c' in n) return n.c;
+  switch(n.op){
+    case '¬': return !evL(n.x,env);
+    case '∧': return evL(n.l,env)&&evL(n.r,env);
+    case '∨': return evL(n.l,env)||evL(n.r,env);
+    case '⊕': return evL(n.l,env)!==evL(n.r,env);
+    case '→': return !evL(n.l,env)||evL(n.r,env);
+    case '↔': return evL(n.l,env)===evL(n.r,env);
+  }
+}
+function strL(n,top=true){
+  if(n.v) return n.v;
+  if('c' in n) return n.c?'T':'F';
+  if(n.op==='¬') return '¬'+strL(n.x,false);
+  const s=strL(n.l,false)+' '+n.op+' '+strL(n.r,false);
+  return top?s:'('+s+')';
+}
+const L={bits:false};
+const logicPresets=[
+  ['Conditional','p → q'],['Contrapositive','(p → q) ↔ (¬q → ¬p)'],['Converse','(p → q) ↔ (q → p)'],
+  ['De Morgan','¬(p ∧ q) ↔ (¬p ∨ ¬q)'],['Syllogism','(p → q) ∧ (q → r) → (p → r)'],['Modus ponens','(p ∧ (p → q)) → q'],
+  ['Excluded middle','p ∨ ¬p'],['Contradiction','p ∧ ¬p'],['XOR','p ⊕ q']
+];
+$('#logicPresets').innerHTML=logicPresets.map(([n,e])=>`<button type="button" class="chip" data-e="${e}" title="${e}">${n}</button>`).join('');
+$('#logicPresets').addEventListener('click',e=>{const b=e.target.closest('[data-e]'); if(!b) return; $('#logicExpr').value=b.dataset.e; logicUpdate();});
+$('#logicExpr').addEventListener('input',logicUpdate);
+$('#tfTF').addEventListener('click',()=>{L.bits=false; logicUpdate();});
+$('#tf10').addEventListener('click',()=>{L.bits=true; logicUpdate();});
+function logicUpdate(){
+  $('#tfTF').setAttribute('aria-pressed',String(!L.bits)); $('#tf10').setAttribute('aria-pressed',String(L.bits));
+  let ast;
+  try{ ast=parseLogic($('#logicExpr').value); }
+  catch(e){ $('#logicErr').hidden=false; $('#logicErr').textContent=e.message; return; }
+  const vars=new Set(), cols=[], seen=new Set();
+  (function walk(n){
+    if(n.v){ vars.add(n.v); return; }
+    if('c' in n) return;
+    if(n.x) walk(n.x); else { walk(n.l); walk(n.r); }
+    const k=strL(n); if(!seen.has(k)){ seen.add(k); cols.push(n); }
+  })(ast);
+  const vs=[...vars].sort();
+  if(vs.length>5){ $('#logicErr').hidden=false; $('#logicErr').textContent=`That uses ${vs.length} variables. Keep it to 5 or fewer (32 rows).`; return; }
+  $('#logicErr').hidden=true;
+  const n=vs.length, rows=1<<n, show=b=>L.bits?(b?'1':'0'):(b?'T':'F');
+  let h='<thead><tr>'+vs.map(v=>`<th class="var"><i>${v}</i></th>`).join('')+cols.map((c,i)=>`<th class="${i===cols.length-1?'main':''}">${esc(strL(c)).replace(/\b([p-z])\b/g,'<i>$1</i>')}</th>`).join('')+'</tr></thead><tbody>';
+  let trues=0;
+  for(let r=0;r<rows;r++){
+    const env={}; vs.forEach((v,i)=>env[v]=!((r>>(n-1-i))&1));
+    h+='<tr>'+vs.map(v=>`<td class="var ${env[v]?'T':'F'}">${show(env[v])}</td>`).join('');
+    cols.forEach((c,i)=>{ const val=evL(c,env); if(i===cols.length-1&&val) trues++; h+=`<td class="${val?'T':'F'}${i===cols.length-1?' main':''}">${show(val)}</td>`; });
+    h+='</tr>';
+  }
+  if(!cols.length){ // single variable or constant
+    h='<thead><tr>'+vs.map(v=>`<th class="main"><i>${v}</i></th>`).join('')+'</tr></thead><tbody>';
+    for(let r=0;r<rows;r++){ const val=!((r>>(n-1))&1); if(val) trues++; h+=`<tr><td class="main ${val?'T':'F'}">${show(val)}</td></tr>`; }
+  }
+  $('#truthTable').innerHTML=h+'</tbody>';
+  let v;
+  if(trues===rows) v=`<span class="verdict good">✓ Tautology</span> <span class="note" style="display:inline">True in all ${rows} rows.</span>`;
+  else if(trues===0) v=`<span class="verdict bad">✕ Contradiction</span> <span class="note" style="display:inline">False in all ${rows} rows.</span>`;
+  else v=`<span class="verdict mid">Contingency</span> <span class="note" style="display:inline">True in ${trues} of ${rows} rows.</span>`;
+  $('#logicVerdict').innerHTML=v;
+}
+
+/* ======================= RELATIONS ======================= */
+const RL={E:[],R:new Set()};
+const rk=(a,b)=>a+'\u0000'+b;
+const relPresets=[
+  ['a ≤ b',(a,b)=>a<=b],['a < b',(a,b)=>a<b],['a divides b',(a,b)=>a!==0&&b%a===0],
+  ['a ≡ b (mod 2)',(a,b)=>Math.abs(a-b)%2===0],['a = b',(a,b)=>a===b],['b = a + 1',(a,b)=>b===a+1]
+];
+$('#relPresets').innerHTML=relPresets.map(([n],i)=>`<button type="button" class="chip m" data-i="${i}">${n}</button>`).join('');
+$('#relPresets').addEventListener('click',e=>{
+  const b=e.target.closest('[data-i]'); if(!b) return;
+  const f=relPresets[+b.dataset.i][1]; RL.R=new Set();
+  RL.E.forEach(a=>RL.E.forEach(c=>{ const x=Number(a), y=Number(c); if(!isNaN(x)&&!isNaN(y)&&f(x,y)) RL.R.add(rk(a,c)); }));
+  relRender();
+});
+$('#relSet').addEventListener('input',()=>{ relReadSet(); relRender(); });
+$('#relMatrix').addEventListener('click',e=>{
+  const b=e.target.closest('.relcell'); if(!b) return;
+  const k=rk(RL.E[+b.dataset.i],RL.E[+b.dataset.j]);
+  RL.R.has(k)?RL.R.delete(k):RL.R.add(k);
+  relRender();
+});
+$$('[data-clos]').forEach(b=>b.addEventListener('click',()=>{
+  const E=RL.E, has=(a,c)=>RL.R.has(rk(a,c));
+  if(b.dataset.clos==='r') E.forEach(a=>RL.R.add(rk(a,a)));
+  if(b.dataset.clos==='s') [...RL.R].forEach(k=>{ const [a,c]=k.split('\u0000'); RL.R.add(rk(c,a)); });
+  if(b.dataset.clos==='t') E.forEach(k=>E.forEach(i=>{ if(has(i,k)) E.forEach(j=>{ if(has(k,j)) RL.R.add(rk(i,j)); }); }));
+  if(b.dataset.clos==='x') RL.R.clear();
+  relRender();
+}));
+function relReadSet(){
+  RL.E=parseSetList($('#relSet').value).slice(0,7);
+  const ok=new Set(RL.E);
+  [...RL.R].forEach(k=>{ const [a,b]=k.split('\u0000'); if(!ok.has(a)||!ok.has(b)) RL.R.delete(k); });
+}
+function relRender(){
+  const E=RL.E, has=(a,b)=>RL.R.has(rk(a,b)), n=E.length;
+  // matrix
+  let h='<tr><th></th>'+E.map(e=>`<th>${esc(e)}</th>`).join('')+'</tr>';
+  E.forEach((a,i)=>{ h+=`<tr><th>${esc(a)}</th>`+E.map((b,j)=>`<td><button type="button" class="relcell" data-i="${i}" data-j="${j}" aria-pressed="${has(a,b)}" aria-label="(${esc(a)}, ${esc(b)})">${has(a,b)?1:0}</button></td>`).join('')+'</tr>'; });
+  $('#relMatrix').innerHTML=h;
+  // pairs
+  const pairs=[]; E.forEach(a=>E.forEach(b=>{ if(has(a,b)) pairs.push(`(${a}, ${b})`); }));
+  $('#relPairs').innerHTML=`R = ${esc(pairs.length?'{'+pairs.join(', ')+'}':'∅')}<br><span class="muted">n(R) = ${pairs.length} of ${n*n} possible pairs in A × A</span>`;
+  // graph
+  const cx=170, cy=150, R=n<=1?0:112, nr=17;
+  const pos=E.map((_,i)=>{ const t=-Math.PI/2+i*2*Math.PI/Math.max(n,1); return {x:cx+R*Math.cos(t),y:cy+R*Math.sin(t),t}; });
+  let s='<defs><marker id="ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink)"/></marker></defs>';
+  E.forEach((a,i)=>E.forEach((b,j)=>{
+    if(!has(a,b)) return;
+    const p1=pos[i], p2=pos[j];
+    if(i===j){
+      const t=n<=1?-Math.PI/2:p1.t, lx=p1.x+Math.cos(t)*(nr+9), ly=p1.y+Math.sin(t)*(nr+9);
+      s+=`<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="11" style="fill:none;stroke:var(--accent);stroke-width:1.8"/>`;
+      return;
+    }
+    const dx=p2.x-p1.x, dy=p2.y-p1.y, Ln=Math.hypot(dx,dy), ux=dx/Ln, uy=dy/Ln;
+    if(!has(b,a)){
+      s+=`<line x1="${(p1.x+ux*nr).toFixed(1)}" y1="${(p1.y+uy*nr).toFixed(1)}" x2="${(p2.x-ux*(nr+3)).toFixed(1)}" y2="${(p2.y-uy*(nr+3)).toFixed(1)}" style="stroke:var(--ink);stroke-width:1.6" marker-end="url(#ah)"/>`;
+    }else{
+      const qx=(p1.x+p2.x)/2-uy*22, qy=(p1.y+p2.y)/2+ux*22;
+      const u1=Math.hypot(qx-p1.x,qy-p1.y), u2=Math.hypot(qx-p2.x,qy-p2.y);
+      const sx=p1.x+(qx-p1.x)/u1*nr, sy=p1.y+(qy-p1.y)/u1*nr, ex=p2.x+(qx-p2.x)/u2*(nr+3), ey=p2.y+(qy-p2.y)/u2*(nr+3);
+      s+=`<path d="M${sx.toFixed(1)},${sy.toFixed(1)} Q${qx.toFixed(1)},${qy.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}" style="fill:none;stroke:var(--ink);stroke-width:1.6" marker-end="url(#ah)"/>`;
+    }
+  }));
+  E.forEach((a,i)=>{ s+=`<circle cx="${pos[i].x.toFixed(1)}" cy="${pos[i].y.toFixed(1)}" r="${nr}" style="fill:var(--surface);stroke:var(--setA);stroke-width:2.2"/><text x="${pos[i].x.toFixed(1)}" y="${pos[i].y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" style="fill:var(--ink);font:600 13px 'JetBrains Mono',monospace">${esc(a.length>3?a.slice(0,3):a)}</text>`; });
+  if(!n) s+=`<text x="170" y="150" text-anchor="middle" style="fill:var(--muted);font:14px 'IBM Plex Sans',sans-serif">Add elements to the set A</text>`;
+  $('#relGraph').innerHTML=s;
+  // properties
+  const P=[];
+  const pr=(name,ok,why)=>P.push({name,ok,why});
+  let w=E.find(a=>!has(a,a));
+  const refl=w===undefined; pr('Reflexive',refl,refl?'Every element is related to itself: (a, a) ∈ R for all a.':`(${w}, ${w}) is missing.`);
+  w=E.find(a=>has(a,a));
+  pr('Irreflexive',w===undefined,w===undefined?'No element is related to itself.':`(${w}, ${w}) ∈ R.`);
+  let sw=null; E.some(a=>E.some(b=>{ if(has(a,b)&&!has(b,a)){ sw=[a,b]; return true; } return false; }));
+  const sym=!sw; pr('Symmetric',sym,sym?'Whenever (a, b) ∈ R, (b, a) ∈ R too.':`(${sw[0]}, ${sw[1]}) ∈ R but (${sw[1]}, ${sw[0]}) ∉ R.`);
+  let aw=null; E.some(a=>E.some(b=>{ if(a!==b&&has(a,b)&&has(b,a)){ aw=[a,b]; return true; } return false; }));
+  const anti=!aw; pr('Antisymmetric',anti,anti?'No two different elements are related both ways.':`(${aw[0]}, ${aw[1]}) and (${aw[1]}, ${aw[0]}) are both in R.`);
+  let tw=null; E.some(a=>E.some(b=>has(a,b)&&E.some(c=>{ if(has(b,c)&&!has(a,c)){ tw=[a,b,c]; return true; } return false; })));
+  const trans=!tw; pr('Transitive',trans,trans?'Whenever (a, b) and (b, c) are in R, so is (a, c).':`(${tw[0]}, ${tw[1]}) and (${tw[1]}, ${tw[2]}) are in R, but (${tw[0]}, ${tw[2]}) isn't.`);
+  const eqv=refl&&sym&&trans;
+  let eqWhy='Needs reflexive, symmetric and transitive.';
+  if(eqv&&n){
+    const cls=[], done=new Set();
+    E.forEach(a=>{ if(done.has(a)) return; const c=E.filter(b=>has(a,b)); c.forEach(x=>done.add(x)); cls.push('{'+c.join(', ')+'}'); });
+    eqWhy='Equivalence classes: '+cls.join(', ');
+  }
+  pr('Equivalence relation',eqv&&n>0,eqWhy);
+  const po=refl&&anti&&trans;
+  pr('Partial order',po&&n>0,po?'Reflexive, antisymmetric and transitive. It can be drawn as a Hasse diagram.':'Needs reflexive, antisymmetric and transitive.');
+  let fw=null; E.some(a=>{ const img=E.filter(b=>has(a,b)); if(img.length!==1){ fw=[a,img]; return true; } return false; });
+  let fwhy;
+  if(!fw) fwhy='Each element has exactly one image: '+E.map(a=>`f(${a}) = ${E.find(b=>has(a,b))}`).join(', ');
+  else fwhy=fw[1].length===0?`${fw[0]} has no image, so f(${fw[0]}) is undefined.`:`${fw[0]} maps to ${fw[1].join(' and ')}. A function gives exactly one output.`;
+  pr('Function A → A',!fw&&n>0,fwhy);
+  $('#relProps').innerHTML=P.map(p=>`<div class="prop"><div class="ph"><span class="tick ${p.ok?'y':'n'}" aria-hidden="true">${p.ok?'✓':'✕'}</span>${p.name}<span class="sr">${p.ok?' yes':' no'}</span></div><p>${esc(p.why)}</p></div>`).join('');
+}
+
+/* ======================= MATRICES ======================= */
+function gcd(a,b){ a=Math.abs(a); b=Math.abs(b); while(b){ [a,b]=[b,a%b]; } return a||1; }
+class Fr{
+  constructor(n,d=1){ if(d<0){n=-n;d=-d;} const g=gcd(n,d); this.n=n/g+0; this.d=d/g; }
+  static parse(s){
+    s=String(s).trim().replace('−','-');
+    if(s===''||s==='-') return new Fr(0);
+    let m=s.match(/^(-?\d+)\s*\/\s*(-?\d+)$/);
+    if(m){ if(+m[2]===0) return null; return new Fr(+m[1],+m[2]); }
+    m=s.match(/^(-?)(\d*)\.?(\d*)$/);
+    if(m&&(m[2]||m[3])){ const dec=m[3]||''; if(dec.length>6) return null; return new Fr((m[1]?-1:1)*parseInt((m[2]||'0')+dec,10),10**dec.length); }
+    return null;
+  }
+  add(o){return new Fr(this.n*o.d+o.n*this.d,this.d*o.d);}
+  sub(o){return new Fr(this.n*o.d-o.n*this.d,this.d*o.d);}
+  mul(o){return new Fr(this.n*o.n,this.d*o.d);}
+  div(o){return new Fr(this.n*o.d,this.d*o.n);}
+  neg(){return new Fr(-this.n,this.d);}
+  isZero(){return this.n===0;}
+  isOne(){return this.n===1&&this.d===1;}
+}
+const fmt=f=>{ const a=Math.abs(f.n), s=f.n<0?'−':''; return f.d===1?s+a:`${s}<span class="fr"><span>${a}</span><span>${f.d}</span></span>`; };
+const fmtP=f=>{ const a=Math.abs(f.n), s=f.n<0?'−':''; return f.d===1?s+a:`${s}${a}/${f.d}`; };
+const fmtT=f=>(f.n<0||f.d!==1)?`(${fmtP(f)})`:fmtP(f);
+
+const MS={
+  A:{r:3,c:3,v:[['2','-1','0'],['1','3','2'],['0','1','4']]},
+  B:{r:3,c:3,v:[['1','0','2'],['0','1','1'],['1','-1','0']]}
+};
+const MX={op:'mulAB',sel:[0,0]};
+const matOps=[['add','A + B'],['sub','A − B'],['mulAB','A × B'],['mulBA','B × A'],['scalar','k · A'],['transpose','Aᵀ'],['det','det(A)'],['inv','A⁻¹']];
+$('#matOps').innerHTML=matOps.map(([k,l])=>`<button type="button" class="chip m" data-op="${k}">${l}</button>`).join('');
+$('#matOps').addEventListener('click',e=>{ const b=e.target.closest('[data-op]'); if(!b) return; MX.op=b.dataset.op; MX.sel=[0,0]; matCompute(); });
+$('#matK').addEventListener('input',matCompute);
+
+function renderEditor(name){
+  const m=MS[name];
+  const opts=v=>[1,2,3,4].map(x=>`<option value="${x}"${x===v?' selected':''}>${x}</option>`).join('');
+  let h=`<div class="ed-head"><h3>Matrix ${name}</h3><div class="dims"><label class="sr" for="${name}-rows">Rows of ${name}</label><select id="${name}-rows">${opts(m.r)}</select><span class="muted">×</span><label class="sr" for="${name}-cols">Columns of ${name}</label><select id="${name}-cols">${opts(m.c)}</select></div></div>`;
+  h+=`<div class="mat edit" style="--cols:${m.c}">`;
+  for(let i=0;i<m.r;i++) for(let j=0;j<m.c;j++) h+=`<input id="${name}-${i}-${j}" data-i="${i}" data-j="${j}" value="${esc(m.v[i][j])}" aria-label="${name} row ${i+1} column ${j+1}" autocomplete="off">`;
+  h+=`</div><div class="ed-foot"><button type="button" class="btn" data-fill="rand">Random</button><button type="button" class="btn" data-fill="id">Identity</button><button type="button" class="btn" data-fill="zero">Zeros</button></div>`;
+  const el=$('#ed'+name); el.innerHTML=h;
+  const resize=()=>{
+    const r=+$(`#${name}-rows`).value, c=+$(`#${name}-cols`).value;
+    m.v=Array.from({length:r},(_,i)=>Array.from({length:c},(_,j)=>(m.v[i]&&m.v[i][j]!==undefined)?m.v[i][j]:'0'));
+    m.r=r; m.c=c; renderEditor(name); matCompute();
+  };
+  $(`#${name}-rows`).addEventListener('change',resize);
+  $(`#${name}-cols`).addEventListener('change',resize);
+  $$('.mat.edit input',el).forEach(inp=>inp.addEventListener('input',()=>{ m.v[+inp.dataset.i][+inp.dataset.j]=inp.value; matCompute(); }));
+  $$('[data-fill]',el).forEach(b=>b.addEventListener('click',()=>{
+    const f=b.dataset.fill;
+    m.v=m.v.map((row,i)=>row.map((_,j)=>f==='rand'?String(Math.floor(Math.random()*13)-4):f==='id'?(i===j?'1':'0'):'0'));
+    renderEditor(name); matCompute();
+  }));
+}
+function getMat(name){
+  const m=MS[name], out=[];
+  for(let i=0;i<m.r;i++){ out.push([]); for(let j=0;j<m.c;j++){ const f=Fr.parse(m.v[i][j]); if(!f) throw new Error(`${name} row ${i+1}, column ${j+1} ("${m.v[i][j]}") isn't a number. Use integers, decimals or fractions like 3/4.`); out[i].push(f); } }
+  return out;
+}
+const dims=M=>`${M.length}×${M[0].length}`;
+function matHTML(M,name,click,opt={}){
+  const c=M[0].length;
+  let h=`<div class="mat${opt.small?' small':''}" data-name="${name}" style="--cols:${c}">`;
+  M.forEach((row,i)=>row.forEach((v,j)=>{
+    const cls='cell'+(opt.div!==undefined&&j===opt.div?' div':'');
+    h+=click?`<button type="button" class="${cls}" data-i="${i}" data-j="${j}" aria-label="Explain row ${i+1} column ${j+1}">${fmt(v)}</button>`:`<span class="${cls}" data-i="${i}" data-j="${j}">${fmt(v)}</span>`;
+  }));
+  return h+'</div>';
+}
+const fig=(label,M,name,click)=>`<figure class="matfig"><figcaption>${label}<small>${dims(M)}</small></figcaption>${matHTML(M,name,click)}</figure>`;
+const opS=s=>`<span class="opsym">${s}</span>`;
+const mulM=(X,Y)=>X.map((row,i)=>Y[0].map((_,j)=>row.reduce((s,x,k)=>s.add(x.mul(Y[k][j])),new Fr(0))));
+const minor=(A,r,c)=>A.filter((_,i)=>i!==r).map(row=>row.filter((_,j)=>j!==c));
+function detVal(A){
+  const n=A.length;
+  if(n===1) return A[0][0];
+  if(n===2) return A[0][0].mul(A[1][1]).sub(A[0][1].mul(A[1][0]));
+  let s=new Fr(0);
+  for(let j=0;j<n;j++){ const t=A[0][j].mul(detVal(minor(A,0,j))); s=j%2?s.sub(t):s.add(t); }
+  return s;
+}
+const ij=(i,j)=>`<sub>${i+1}${j+1}</sub>`;
+
+function matCompute(){
+  $$('#matOps [data-op]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.op===MX.op)));
+  $('#kField').hidden=MX.op!=='scalar';
+  const D=$('#matDisplay'), X=$('#matExplain');
+  let A,B;
+  try{ A=getMat('A'); B=getMat('B'); }
+  catch(e){ D.innerHTML=`<p class="err">${esc(e.message)}</p>`; X.innerHTML=''; return; }
+  const op=MX.op, fail=m=>{ D.innerHTML=`<p class="err">${m}</p>`; X.innerHTML=''; };
+  let C=null, left='', right='';
+  MX.ctx={A,B,op};
+  if(op==='add'||op==='sub'){
+    if(dims(A)!==dims(B)) return fail(`Can't ${op==='add'?'add':'subtract'}: A is ${dims(A)} and B is ${dims(B)}. Both must have the same size.`);
+    C=A.map((r,i)=>r.map((x,j)=>op==='add'?x.add(B[i][j]):x.sub(B[i][j])));
+    D.innerHTML=fig('A',A,'A')+opS(op==='add'?'+':'−')+fig('B',B,'B')+opS('=')+fig(op==='add'?'A + B':'A − B',C,'C',true);
+  }else if(op==='mulAB'||op==='mulBA'){
+    const [P,Q,pn,qn]=op==='mulAB'?[A,B,'A','B']:[B,A,'B','A'];
+    if(P[0].length!==Q.length) return fail(`Can't multiply ${pn} × ${qn}: ${pn} is ${dims(P)} and ${qn} is ${dims(Q)}. The columns of ${pn} (${P[0].length}) must equal the rows of ${qn} (${Q.length}).`);
+    C=mulM(P,Q);
+    D.innerHTML=fig(pn,P,pn)+opS('×')+fig(qn,Q,qn)+opS('=')+fig(`${pn}${qn}`,C,'C',true);
+  }else if(op==='scalar'){
+    const k=Fr.parse($('#matK').value); if(!k) return fail('k must be a number, such as 3, −2 or 1/2.');
+    MX.ctx.k=k;
+    C=A.map(r=>r.map(x=>x.mul(k)));
+    D.innerHTML=`<span class="scalar">${fmt(k)}</span>`+opS('·')+fig('A',A,'A')+opS('=')+fig('kA',C,'C',true);
+  }else if(op==='transpose'){
+    C=A[0].map((_,j)=>A.map(r=>r[j]));
+    D.innerHTML=fig('A',A,'A')+opS('→')+fig('Aᵀ',C,'C',true);
+  }else if(op==='det'){
+    if(A.length!==A[0].length) return fail(`The determinant needs a square matrix. A is ${dims(A)}.`);
+    const v=detVal(A);
+    D.innerHTML=fig('A',A,'A')+`<span class="scalar">det(A) = <b>${fmt(v)}</b></span>`;
+    X.innerHTML=detExplain(A,v);
+    return;
+  }else if(op==='inv'){
+    if(A.length!==A[0].length) return fail(`Only square matrices have inverses. A is ${dims(A)}.`);
+    const res=invSteps(A);
+    if(res.singular){
+      D.innerHTML=fig('A',A,'A')+`<span class="scalar">det(A) = 0</span>`;
+      X.innerHTML=`<p><span class="verdict bad">No inverse</span> A is singular: det(A) = 0, so its rows are linearly dependent and elimination runs out of pivots.</p>`+stepsHTML(res.steps,A.length);
+      return;
+    }
+    const I=mulM(A,res.inv);
+    D.innerHTML=fig('A',A,'A')+opS('→')+fig('A⁻¹',res.inv,'C',false)+`<span class="note" style="align-self:center">Check: A · A⁻¹ ${I.every((r,i)=>r.every((x,j)=>i===j?x.isOne():x.isZero()))?'= I ✓':'≠ I'}</span>`;
+    X.innerHTML=`<p class="eq">Gauss–Jordan elimination: row-reduce [A | I] until the left side is I. The right side is then A⁻¹.</p>`+stepsHTML(res.steps,A.length);
+    return;
+  }
+  MX.C=C;
+  const [si,sj]=MX.sel; MX.sel=[Math.min(si,C.length-1),Math.min(sj,C[0].length-1)];
+  $$('[data-name="C"] .cell',D).forEach(b=>{
+    const go=()=>{ MX.sel=[+b.dataset.i,+b.dataset.j]; matHighlight(); };
+    b.addEventListener('click',go); b.addEventListener('mouseenter',go); b.addEventListener('focus',go);
+  });
+  matHighlight();
+}
+function matHighlight(){
+  const D=$('#matDisplay'), X=$('#matExplain'), [i,j]=MX.sel, {A,B,op,k}=MX.ctx, C=MX.C;
+  $$('.cell',D).forEach(c=>c.classList.remove('hl','on'));
+  const mark=(name,fn,cls='hl')=>$$(`[data-name="${name}"] .cell`,D).forEach(c=>{ if(fn(+c.dataset.i,+c.dataset.j)) c.classList.add(cls); });
+  mark('C',(a,b)=>a===i&&b===j,'on');
+  let h='';
+  const cij=`<i>c</i>${ij(i,j)}`;
+  if(op==='add'||op==='sub'){
+    mark('A',(a,b)=>a===i&&b===j); mark('B',(a,b)=>a===i&&b===j);
+    h=`<p class="eq">${cij} = <i>a</i>${ij(i,j)} ${op==='add'?'+':'−'} <i>b</i>${ij(i,j)} = ${fmtP(A[i][j])} ${op==='add'?'+':'−'} ${fmtT(B[i][j])} = <b>${fmt(C[i][j])}</b></p><p class="hint">Matching positions are combined. Click another cell of the answer to see its working.</p>`;
+  }else if(op==='mulAB'||op==='mulBA'){
+    const [P,Q,pn,qn]=op==='mulAB'?[A,B,'A','B']:[B,A,'B','A'];
+    mark(pn,a=>a===i); mark(qn,(a,b)=>b===j);
+    const terms=P[i].map((x,t)=>`${fmtT(x)}·${fmtT(Q[t][j])}`);
+    h=`<p class="eq">${cij} = (row ${i+1} of ${pn}) · (column ${j+1} of ${qn})</p><p class="eq">= ${terms.join(' + ')} = <b>${fmt(C[i][j])}</b></p><p class="hint">Multiply matching entries across the highlighted row and column, then add. The answer is ${C.length}×${C[0].length} because ${pn} has ${P.length} rows and ${qn} has ${Q[0].length} columns. Click another cell to follow it.</p>`;
+  }else if(op==='scalar'){
+    mark('A',(a,b)=>a===i&&b===j);
+    h=`<p class="eq">${cij} = k · <i>a</i>${ij(i,j)} = ${fmtT(k)} · ${fmtT(A[i][j])} = <b>${fmt(C[i][j])}</b></p><p class="hint">Every entry is multiplied by the same scalar k.</p>`;
+  }else if(op==='transpose'){
+    mark('A',(a,b)=>a===j&&b===i);
+    h=`<p class="eq">(Aᵀ)${ij(i,j)} = <i>a</i>${ij(j,i)} = <b>${fmt(C[i][j])}</b></p><p class="hint">Rows become columns: row ${j+1} of A becomes column ${j+1} of Aᵀ.</p>`;
+  }
+  X.innerHTML=h;
+}
+function detExplain(A,v){
+  const n=A.length;
+  let h='';
+  if(n===1) h=`<p class="eq">For a 1×1 matrix, det(A) is the entry itself: <b>${fmt(v)}</b></p>`;
+  else if(n===2){
+    const [[a,b],[c,d]]=A;
+    h=`<p class="eq">det(A) = <i>ad</i> − <i>bc</i> = ${fmtT(a)}·${fmtT(d)} − ${fmtT(b)}·${fmtT(c)} = ${fmtP(a.mul(d))} − ${fmtT(b.mul(c))} = <b>${fmt(v)}</b></p>`;
+  }else{
+    const parts=[], nums=[];
+    let minorsH='<div class="minors">';
+    for(let j=0;j<n;j++){
+      const Mj=minor(A,0,j), dv=detVal(Mj), sgn=j%2?'−':'+';
+      parts.push(`${j===0?'':sgn+' '}<i>a</i>${ij(0,j)}·det(M${ij(0,j)})`);
+      nums.push(`${j===0?'':sgn+' '}${fmtT(A[0][j])}·${fmtT(dv)}`);
+      let calc='';
+      if(Mj.length===2){ const [[a,b],[c,d]]=Mj; calc=` = ${fmtT(a)}·${fmtT(d)} − ${fmtT(b)}·${fmtT(c)}`; }
+      minorsH+=`<div class="minor">M${ij(0,j)} = ${matHTML(Mj,'m'+j,false,{small:true})}<span>det${calc} = <b>${fmtP(dv)}</b></span></div>`;
+    }
+    minorsH+='</div>';
+    h=`<p class="eq">Cofactor expansion along row 1 (signs alternate + − + …):</p><p class="eq">det(A) = ${parts.join(' ')}</p><p class="eq">= ${nums.join(' ')} = <b>${fmt(v)}</b></p>${minorsH}<p class="hint">M${ij(0,0).replace('11','1j')} is A with row 1 and column j deleted.</p>`;
+  }
+  h+=v.isZero()?`<p><span class="verdict bad">Singular</span> det(A) = 0, so A has no inverse.</p>`:`<p><span class="verdict good">Invertible</span> det(A) ≠ 0, so A⁻¹ exists.</p>`;
+  return h;
+}
+function invSteps(A){
+  const n=A.length, clone=M=>M.map(r=>r.slice());
+  const M=A.map((row,i)=>[...row,...Array.from({length:n},(_,j)=>new Fr(i===j?1:0))]);
+  const steps=[{ops:['Start with [A | I]'],M:clone(M)}];
+  const R=k=>`R<sub>${k+1}</sub>`;
+  for(let c=0;c<n;c++){
+    const ops=[]; let p=-1;
+    for(let r=c;r<n;r++) if(!M[r][c].isZero()){ p=r; break; }
+    if(p<0){ steps.push({ops:[`Column ${c+1} has no nonzero pivot below row ${c}. Stop.`],M:clone(M)}); return {singular:true,steps}; }
+    if(p!==c){ [M[p],M[c]]=[M[c],M[p]]; ops.push(`${R(c)} ↔ ${R(p)}`); }
+    const pv=M[c][c];
+    if(!pv.isOne()){ const iv=new Fr(pv.d,pv.n); M[c]=M[c].map(x=>x.mul(iv)); ops.push(`${R(c)} → ${fmtT(iv)}·${R(c)}`); }
+    for(let r=0;r<n;r++){
+      if(r===c||M[r][c].isZero()) continue;
+      const f=M[r][c]; M[r]=M[r].map((x,k)=>x.sub(f.mul(M[c][k])));
+      ops.push(f.n<0?`${R(r)} → ${R(r)} + ${fmtT(f.neg())}·${R(c)}`:`${R(r)} → ${R(r)} − ${fmtT(f)}·${R(c)}`);
+    }
+    if(ops.length) steps.push({ops,M:clone(M)});
+  }
+  return {singular:false,steps,inv:M.map(r=>r.slice(n))};
+}
+function stepsHTML(steps,n){
+  return '<ol class="steps">'+steps.map((s,k)=>`<li><p class="ops">${k===0?'':'Step '+k+': '}${s.ops.join(' &nbsp;·&nbsp; ')}</p><div style="overflow-x:auto">${matHTML(s.M,'s'+k,false,{small:true,div:n})}</div></li>`).join('')+'</ol>';
+}
+
+/* ======================= TRANSFORMATIONS ======================= */
+const TF={t:1,anim:0};
+const tfPresets=[
+  ['Shear x',[1,1,0,1]],['Rotate 90°',[0,-1,1,0]],['Rotate 30°',[0.866,-0.5,0.5,0.866]],['Scale ×1.5',[1.5,0,0,1.5]],
+  ['Stretch x',[2,0,0,1]],['Reflect in y-axis',[-1,0,0,1]],['Reflect in y = x',[0,1,1,0]],['Project onto x-axis',[1,0,0,0]]
+];
+$('#tfPresets').innerHTML=tfPresets.map(([n],i)=>`<button type="button" class="chip" data-i="${i}">${n}</button>`).join('');
+$('#tfPresets').addEventListener('click',e=>{
+  const b=e.target.closest('[data-i]'); if(!b) return;
+  const v=tfPresets[+b.dataset.i][1]; ['a','b','c','d'].forEach((k,i)=>$('#tf-'+k).value=v[i]);
+  playTF();
+});
+['a','b','c','d'].forEach(k=>$('#tf-'+k).addEventListener('input',tfUpdate));
+$('#tfT').addEventListener('input',()=>{ cancelAnimationFrame(TF.anim); TF.t=$('#tfT').value/100; tfUpdate(); });
+$('#tfPlay').addEventListener('click',playTF);
+function tfVals(){ return ['a','b','c','d'].map(k=>{ const f=Fr.parse($('#tf-'+k).value); return f?f.n/f.d:NaN; }); }
+function playTF(){
+  cancelAnimationFrame(TF.anim);
+  if(reduceMotion){ TF.t=1; tfUpdate(); return; }
+  const t0=performance.now(), dur=1300;
+  const step=now=>{ const u=Math.min(1,(now-t0)/dur); TF.t=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2; tfUpdate(); if(u<1) TF.anim=requestAnimationFrame(step); };
+  TF.anim=requestAnimationFrame(step);
+}
+function tfUpdate(){
+  $('#tfT').value=Math.round(TF.t*100); $('#tfTval').textContent=Math.round(TF.t*100)+'%';
+  const [a,b,c,d]=tfVals();
+  const ro=$('#tfReadout');
+  if([a,b,c,d].some(isNaN)){ ro.innerHTML='<p class="err">Every entry of M must be a number, such as 2, −0.5 or 1/2.</p>'; drawTF(); return; }
+  const det=a*d-b*c, r=x=>Math.round(x*1000)/1000;
+  let orient=Math.abs(det)<1e-9?'<span class="verdict bad">Collapses the plane onto a line (or a point)</span>':det<0?'<span class="verdict mid">Flips orientation (mirror image)</span>':'<span class="verdict good">Keeps orientation</span>';
+  ro.innerHTML=`<div>î = (1, 0) → <b style="color:var(--setA)">(${r(a)}, ${r(c)})</b></div><div>ĵ = (0, 1) → <b style="color:var(--setB)">(${r(b)}, ${r(d)})</b></div><div>det M = ad − bc = ${r(a)}·${r(d)} − ${r(b)}·${r(c)} = <b>${r(det)}</b></div><div class="hint">Areas are multiplied by |det M| = ${r(Math.abs(det))}.</div><div style="margin-top:4px">${orient}</div>`;
+  drawTF();
+}
+function arrow(ctx,x1,y1,x2,y2,col,wd){
+  const a=Math.atan2(y2-y1,x2-x1), L=Math.hypot(x2-x1,y2-y1);
+  ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=wd;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2-Math.cos(a)*Math.min(8,L),y2-Math.sin(a)*Math.min(8,L)); ctx.stroke();
+  if(L<2) return;
+  ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-11*Math.cos(a-0.4),y2-11*Math.sin(a-0.4)); ctx.lineTo(x2-11*Math.cos(a+0.4),y2-11*Math.sin(a+0.4)); ctx.closePath(); ctx.fill();
+}
+function drawTF(){
+  const cv=$('#tfCanvas'); if(!cv||cv.offsetParent===null) return;
+  const {ctx,w,h}=sizeCanvas(cv,400);
+  const u=Math.max(24,Math.min(w,h)/11), ox=w/2-u*0.5, oy=h/2+u*0.8;
+  const [a0,b0,c0,d0]=tfVals().map(x=>isNaN(x)?0:x), t=TF.t;
+  const m=[1+(a0-1)*t,b0*t,c0*t,1+(d0-1)*t];
+  const T=(x,y)=>[ox+(m[0]*x+m[1]*y)*u, oy-(m[2]*x+m[3]*y)*u];
+  const P=(x,y)=>[ox+x*u, oy-y*u];
+  ctx.fillStyle=tok('--surface'); ctx.fillRect(0,0,w,h);
+  ctx.lineWidth=1; ctx.strokeStyle=tok('--grid');
+  for(let k=-30;k<=30;k++){ let [x]=P(k,0); ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); let [,y]=P(0,k); ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+  ctx.strokeStyle=tok('--line'); ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(0,oy); ctx.lineTo(w,oy); ctx.moveTo(ox,0); ctx.lineTo(ox,h); ctx.stroke();
+  ctx.save(); ctx.globalAlpha=.45; ctx.strokeStyle=tok('--accent'); ctx.lineWidth=1;
+  for(let k=-12;k<=12;k++){
+    ctx.beginPath(); ctx.moveTo(...T(k,-12)); ctx.lineTo(...T(k,12)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(...T(-12,k)); ctx.lineTo(...T(12,k)); ctx.stroke();
+  }
+  ctx.restore();
+  // unit square
+  ctx.save(); ctx.globalAlpha=.28; ctx.fillStyle=tok('--setC');
+  ctx.beginPath(); [[0,0],[1,0],[1,1],[0,1]].forEach((p,i)=>ctx[i?'lineTo':'moveTo'](...T(...p))); ctx.closePath(); ctx.fill(); ctx.restore();
+  // F shape
+  const F=[[0,0],[0,3],[2,3],[2,2.4],[0.6,2.4],[0.6,1.8],[1.6,1.8],[1.6,1.2],[0.6,1.2],[0.6,0]].map(([x,y])=>[x+1.6,y+0.4]);
+  ctx.setLineDash([5,4]); ctx.strokeStyle=tok('--muted'); ctx.lineWidth=1.3;
+  ctx.beginPath(); F.forEach((p,i)=>ctx[i?'lineTo':'moveTo'](...P(...p))); ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
+  ctx.save(); ctx.globalAlpha=.9; ctx.fillStyle=tok('--shade');
+  ctx.beginPath(); F.forEach((p,i)=>ctx[i?'lineTo':'moveTo'](...T(...p))); ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.strokeStyle=tok('--ink'); ctx.lineWidth=1.8; ctx.beginPath(); F.forEach((p,i)=>ctx[i?'lineTo':'moveTo'](...T(...p))); ctx.closePath(); ctx.stroke();
+  // basis
+  arrow(ctx,ox,oy,...T(1,0),tok('--setA'),3);
+  arrow(ctx,ox,oy,...T(0,1),tok('--setB'),3);
+  ctx.font='italic 600 17px "STIX Two Text", serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  const [ix,iy]=T(1,0), [jx,jy]=T(0,1);
+  ctx.fillStyle=tok('--setA'); ctx.fillText('î',ix+(ix-ox)*0.18+8,iy+(iy-oy)*0.18+10);
+  ctx.fillStyle=tok('--setB'); ctx.fillText('ĵ',jx+(jx-ox)*0.18-10,jy+(jy-oy)*0.18-4);
+}
+
+/* ======================= NUMBER SYSTEMS ======================= */
+const NB={base:10,target:2,val:214n};
+const DIG='0123456789ABCDEF';
+const baseName={2:'Binary',8:'Octal',10:'Decimal',16:'Hexadecimal'};
+const subB=b=>`<sub>${b}</sub>`;
+function parseBase(s,b){
+  s=s.trim().replace(/[\s_]/g,'').toUpperCase();
+  if(b===16) s=s.replace(/^0X|^#/,''); if(b===2) s=s.replace(/^0B/,''); if(b===8) s=s.replace(/^0O/,'');
+  if(!s) throw new Error('Type a number to convert.');
+  if(s.length>64) throw new Error('That number is too long. Keep it under 64 digits.');
+  const ok=DIG.slice(0,b); let v=0n;
+  for(const ch of s){
+    const d=ok.indexOf(ch);
+    if(d<0) throw new Error(`"${ch}" isn't a base-${b} digit. ${baseName[b]} only uses ${b===16?'0–9 and A–F':'0–'+(b-1)}.`);
+    v=v*BigInt(b)+BigInt(d);
+  }
+  return v;
+}
+const toB=(v,b)=>v.toString(b).toUpperCase();
+const group4=s=>{ const p=s.padStart(Math.ceil(s.length/4)*4,'0'); return p.match(/.{4}/g).join(' '); };
+$('#numIn').addEventListener('input',numUpdate);
+$('#numBase').addEventListener('click',e=>{ const b=e.target.closest('[data-b]'); if(!b) return; switchBase(+b.dataset.b); });
+$('#numTarget').addEventListener('click',e=>{ const b=e.target.closest('[data-b]'); if(!b) return; NB.target=+b.dataset.b; numUpdate(); });
+$('#numCards').addEventListener('click',e=>{ const b=e.target.closest('[data-b]'); if(!b) return; switchBase(+b.dataset.b); });
+$('#numBits').addEventListener('click',e=>{
+  const b=e.target.closest('[data-k]'); if(!b||NB.err) return;
+  NB.val^=(1n<<BigInt(b.dataset.k)); $('#numIn').value=toB(NB.val,NB.base); numUpdate();
+});
+function switchBase(b){
+  if(!NB.err) $('#numIn').value=toB(NB.val,b);
+  NB.base=b; if(NB.target===b&&b!==10) NB.target=b===2?16:2; numUpdate();
+}
+function numUpdate(){
+  $$('#numBase [data-b]').forEach(x=>x.setAttribute('aria-pressed',String(+x.dataset.b===NB.base)));
+  $$('#numTarget [data-b]').forEach(x=>x.setAttribute('aria-pressed',String(+x.dataset.b===NB.target)));
+  try{ NB.val=parseBase($('#numIn').value,NB.base); NB.err=''; }catch(e){ NB.err=e.message; }
+  $('#numErr').hidden=!NB.err; $('#numErr').textContent=NB.err;
+  if(NB.err) return;
+  const v=NB.val;
+  $('#numCards').innerHTML=[2,8,10,16].map(b=>`<button type="button" class="bcard${b===NB.base?' src':''}" data-b="${b}"><span class="bl">${baseName[b]} · base ${b}${b===NB.base?' · input':''}</span><span class="bv">${b===2?group4(toB(v,2)):b===10?v.toLocaleString('en-US'):toB(v,b)}${subB(b)}</span></button>`).join('');
+  // bits
+  const bl=v===0n?1:v.toString(2).length;
+  if(bl>32){ $('#numBits').innerHTML='<p class="hint">The bit view shows up to 32 bits. This number needs '+bl+'.</p>'; }
+  else{
+    const nb=Math.max(8,Math.ceil(bl/8)*8); let h='<div class="bits">';
+    for(let byte=nb/8-1;byte>=0;byte--){
+      h+='<div class="byte">';
+      for(let k=byte*8+7;k>=byte*8;k--){
+        const on=(v>>BigInt(k))&1n;
+        h+=`<div class="bit"><button type="button" data-k="${k}" aria-pressed="${on===1n}" aria-label="Bit ${k}, worth ${2**k}">${on}</button><span>${k<=10?2**k:'2'+sup(k)}</span></div>`;
+      }
+      h+='</div>';
+    }
+    $('#numBits').innerHTML=h+'</div>';
+  }
+  // expansion
+  const b=NB.base, digits=toB(v,b);
+  if(b===10){
+    $('#numExpand').innerHTML=`<p class="hint">The input is already decimal. Pick base 2, 8 or 16 above to see how place values add up.</p><p class="formula" style="margin-top:8px">${v}${subB(10)} = `+digits.split('').map((d,i)=>`${d}·10${sup(digits.length-1-i)}`).join(' + ')+'</p>';
+  }else if(digits.length>20){
+    $('#numExpand').innerHTML='<p class="hint">Too many digits to expand neatly. Use 20 digits or fewer.</p>';
+  }else{
+    const terms=digits.split('').map((d,i)=>({d,dv:DIG.indexOf(d),p:digits.length-1-i}));
+    const l1=terms.map(t=>`${t.dv>9?`${t.d}(${t.dv})`:t.d}·${b}${sup(t.p)}`).join(' + ');
+    const l2=terms.filter(t=>t.dv).map(t=>(BigInt(t.dv)*BigInt(b)**BigInt(t.p)).toLocaleString('en-US')).join(' + ')||'0';
+    $('#numExpand').innerHTML=`<p class="formula">${digits}${subB(b)} = ${l1}</p><p class="formula">= ${l2}</p><p class="formula">= <b>${v.toLocaleString('en-US')}</b>${subB(10)}</p><p class="hint" style="margin-top:8px">Each digit is multiplied by the base raised to its position, counting from 0 on the right.</p>`;
+  }
+  // division
+  const tb=NB.target, rows=[]; let n=v;
+  if(n===0n) rows.push([0n,0n,0n]);
+  while(n>0n&&rows.length<70){ rows.push([n,n/BigInt(tb),n%BigInt(tb)]); n/=BigInt(tb); }
+  $('#numDivide').innerHTML=`<div class="table-scroll" style="max-height:340px;overflow-y:auto"><table class="divtable"><thead><tr><th>Number</th><th>÷ ${tb}</th><th>Quotient</th><th>Remainder</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0].toLocaleString('en-US')}</td><td>÷ ${tb}</td><td>${r[1].toLocaleString('en-US')}</td><td class="rem">${DIG[Number(r[2])]}</td></tr>`).join('')}</tbody></table></div><p class="formula" style="margin-top:10px">Read the remainders from bottom to top: <b>${toB(v,tb)}</b>${subB(tb)}</p>`;
+  // nibbles
+  if(bl>32) $('#numNibbles').innerHTML='<p class="hint">Shown for numbers up to 32 bits.</p>';
+  else{
+    const bits=toB(v,2).padStart(Math.ceil(bl/4)*4,'0');
+    $('#numNibbles').innerHTML='<div class="nibbles">'+bits.match(/.{4}/g).map(g=>`<div class="nib"><span class="nb">${g}</span><span class="nh">${DIG[parseInt(g,2)]}</span></div>`).join('')+`</div><p class="formula" style="margin-top:10px">${group4(toB(v,2))}${subB(2)} = <b>${toB(v,16)}</b>${subB(16)}</p>`;
+  }
+  // apps
+  let apps='';
+  if(v<=0xFFFFFFn){
+    const hx=toB(v,16).padStart(6,'0'), r=parseInt(hx.slice(0,2),16), g=parseInt(hx.slice(2,4),16), bb=parseInt(hx.slice(4),16);
+    apps+=`<div class="app"><div class="swatch" style="background:#${hx}"></div><div><b>Colour</b> <span class="mono">#${hx}</span><br><span class="hint">rgb(${r}, ${g}, ${bb}): 3 bytes, one per channel</span></div></div>`;
+  }
+  if(v<=0xFFFFFFFFn){
+    const x=Number(v), ip=[x>>>24,(x>>>16)&255,(x>>>8)&255,x&255].join('.');
+    apps+=`<div class="app"><div><b>IPv4 address</b> <span class="mono">${ip}</span><br><span class="hint">An IPv4 address is one 32-bit number split into four bytes.</span></div></div>`;
+  }
+  apps+=`<div class="app"><div><b>Storage</b> needs ${bl} bit${bl>1?'s':''}, so ${Math.ceil(bl/8)} byte${Math.ceil(bl/8)>1?'s':''}.<br><span class="hint">One byte (8 bits) holds 0 to 255.</span></div></div>`;
+  $('#numApps').innerHTML=apps;
+}
+
+/* ======================= COUNTING ======================= */
+const fact=n=>{ let r=1n; for(let i=2n;i<=BigInt(n);i++) r*=i; return r; };
+const perm=(n,r)=>{ let p=1n; for(let i=0;i<r;i++) p*=BigInt(n-i); return p; };
+const commas=x=>x.toLocaleString('en-US');
+function sci(big){
+  const s=big.toString(); if(s.length<=15) return commas(big);
+  return `${s[0]}.${s.slice(1,4)} × 10<sup>${s.length-1}</sup>`;
+}
+function prodList(from,count){
+  if(count<=0) return '1';
+  const f=[]; for(let i=0;i<count;i++) f.push(from-i);
+  if(f.length<=8) return f.join(' · ');
+  return f.slice(0,4).join(' · ')+' · … · '+f[f.length-1];
+}
+['cN','cR'].forEach(id=>$('#'+id).addEventListener('input',countUpdate));
+$('#pascal').addEventListener('click',e=>{ const b=e.target.closest('[data-n]'); if(!b) return; $('#cN').value=b.dataset.n; $('#cR').value=b.dataset.r; countUpdate(); });
+function countUpdate(){
+  const n=parseInt($('#cN').value,10), r=parseInt($('#cR').value,10);
+  let err='';
+  if(isNaN(n)||isNaN(r)) err='Enter whole numbers for n and r.';
+  else if(n<0||r<0) err='n and r can\'t be negative.';
+  else if(n>60) err='Keep n at 60 or below.';
+  else if(r>n) err=`r can't be larger than n. You can't choose ${r} items from ${n}.`;
+  $('#cErr').hidden=!err; $('#cErr').textContent=err;
+  if(err){ $('#cCards').innerHTML=''; return; }
+  const nf=fact(n), P=perm(n,r), rf=fact(r), C=P/rf;
+  $('#cCards').innerHTML=`
+  <div class="panel count-card"><p class="mini">Factorial</p><p class="formula">${n}! = ${n===0?'1 (by definition)':prodList(n,n)}</p><div class="big-num">${sci(nf)}</div><p class="hint">Ways to arrange all ${n} items in a line.</p></div>
+  <div class="panel count-card"><p class="mini">Permutation · order matters</p><p class="formula">P(${n}, ${r}) = ${n}! / (${n} − ${r})! = ${prodList(n,r)}</p><div class="big-num">${sci(P)}</div><p class="hint">Ways to fill ${r} ranked places (1st, 2nd, …) from ${n} candidates.</p></div>
+  <div class="panel count-card"><p class="mini">Combination · order doesn't matter</p><p class="formula">C(${n}, ${r}) = ${n}! / (${r}! · (${n} − ${r})!) = P(${n}, ${r}) / ${r}! = ${sci(P)} / ${sci(rf)}</p><div class="big-num">${sci(C)}</div><p class="hint">Ways to pick a team of ${r} from ${n}. Each team is counted once, not ${sci(rf)} times.</p></div>`;
+  // pascal
+  const rowsN=Math.min(Math.max(n,6),14);
+  let h='', row=[1n];
+  for(let i=0;i<=rowsN;i++){
+    h+='<div class="prow">'+row.map((x,j)=>{
+      let cls='pc'; if(i===n&&j===r) cls+=' on'; else if(n>=1&&i===n-1&&(j===r-1||j===r)) cls+=' par';
+      return `<button type="button" class="${cls}" data-n="${i}" data-r="${j}" aria-label="C(${i}, ${j}) = ${x}">${x}</button>`;
+    }).join('')+'</div>';
+    const nx=[1n]; for(let j=1;j<row.length;j++) nx.push(row[j-1]+row[j]); nx.push(1n); row=nx;
+  }
+  if(n>14) h+=`<p class="hint" style="text-align:center">Rows past 14 are hidden. C(${n}, ${r}) = ${sci(C)}.</p>`;
+  $('#pascal').innerHTML=h;
+}
+['pwL','pwU','pwD','pwS','pwLen'].forEach(id=>$('#'+id).addEventListener('input',pwUpdate));
+function human(sec){
+  if(sec<1) return 'under a second';
+  const u=[['year',31557600],['day',86400],['hour',3600],['minute',60],['second',1]];
+  for(const [name,s] of u){ if(sec>=s){ const v=sec/s; if(name==='year'&&v>=1e6){ const e=Math.floor(Math.log10(v)); return `${(v/10**e).toFixed(1)} × 10<sup>${e}</sup> years`; } const r=v<10?v.toFixed(1):Math.round(v).toLocaleString('en-US'); return `${r} ${name}${r==='1.0'||r==='1'?'':'s'}`; } }
+}
+function pwUpdate(){
+  const N=($('#pwL').checked?26:0)+($('#pwU').checked?26:0)+($('#pwD').checked?10:0)+($('#pwS').checked?32:0);
+  const Ln=+$('#pwLen').value; $('#pwLenV').textContent=Ln;
+  if(!N){ $('#pwOut').innerHTML='<p class="err">Pick at least one character set.</p>'; return; }
+  const space=BigInt(N)**BigInt(Ln), secs=Number(space)/1e10;
+  $('#pwOut').innerHTML=`<p class="formula">Each of the ${Ln} positions has ${N} choices, so the number of passwords is ${N}<sup>${Ln}</sup> = <b>${sci(space)}</b></p><p class="hint" style="margin-top:6px">Trying all of them at 10 billion guesses per second would take <b style="color:var(--ink)">${human(secs)}</b>. Adding length grows the count faster than adding symbols, because length is the exponent.</p>`;
+}
+
+/* ---------- boot ---------- */
+renderSetPresets(); setsUpdate();
+logicUpdate();
+relReadSet();
+RL.E.forEach(a=>RL.E.forEach(b=>{ if(Number(b)%Number(a)===0) RL.R.add(rk(a,b)); }));
+relRender();
+renderEditor('A'); renderEditor('B'); matCompute();
+tfUpdate();
+numUpdate();
+countUpdate(); pwUpdate();
+let start='sets';
+const hash=(location.hash||'').slice(1);
+if(hash) start=hash; else { try{ start=localStorage.getItem('itemath-mod')||'sets'; }catch(e){} }
+show(start);
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(redrawAll);
+})();
+</script>
+
+</body>
+</html>
