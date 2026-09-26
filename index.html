@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>body{margin:0}[hidden]{display:none!important}</style>
 <title>ITE Math Lab</title>
+<script>try{var t=localStorage.getItem('itemath-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
@@ -51,6 +52,9 @@ button{font:inherit;color:inherit}
 .course{font:600 11px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
 .brand h1{font-size:30px;font-weight:800;letter-spacing:-.01em;line-height:1.05}
 .brand .tag{color:var(--muted);font-size:13.5px;margin:10px 0 0}
+.theme-btn{margin-top:14px;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px 6px 10px;font:500 13.5px var(--body);cursor:pointer}
+.theme-btn:hover{border-color:var(--accent)}
+.theme-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .nav{display:flex;flex-direction:column;gap:2px;margin-top:22px}
 .nav button{display:flex;align-items:center;gap:10px;padding:8px 10px;border:0;background:none;border-radius:8px;font:500 14px var(--body);text-align:left;cursor:pointer}
 .nav button:hover{background:var(--sunk)}
@@ -241,6 +245,7 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
       <p class="course">Mathematical Applications for ITE</p>
       <h1>ITE Math Lab</h1>
       <p class="tag">Interactive visualizers for the core topics. Change any input and the picture updates.</p>
+      <button type="button" class="theme-btn" id="themeBtn" aria-pressed="false"></button>
     </div>
     <nav class="nav" aria-label="Topics">
       <button type="button" data-mod="sets"><span class="glyph">A∪B</span>Set Theory</button>
@@ -504,6 +509,26 @@ function redrawAll(){ drawVenn(); drawTF(); }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',redrawAll);
 new MutationObserver(redrawAll).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 let rz; window.addEventListener('resize',()=>{clearTimeout(rz); rz=setTimeout(redrawAll,120);});
+
+/* ---------- night mode ---------- */
+const darkMQ=matchMedia('(prefers-color-scheme: dark)');
+const isDark=()=>{ const t=document.documentElement.getAttribute('data-theme'); return t?t==='dark':darkMQ.matches; };
+const MOON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+const SUN='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+function paintThemeBtn(){
+  const d=isDark(), b=$('#themeBtn');
+  b.innerHTML=d?SUN+'Day mode':MOON+'Night mode';
+  b.setAttribute('aria-pressed',String(d));
+}
+$('#themeBtn').addEventListener('click',()=>{
+  const next=isDark()?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  try{localStorage.setItem('itemath-theme',next);}catch(e){}
+  paintThemeBtn();
+});
+darkMQ.addEventListener('change',paintThemeBtn);
+new MutationObserver(paintThemeBtn).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+paintThemeBtn();
 
 /* ---------- navigation ---------- */
 const mods=$$('.mod'), navBtns=$$('.nav button');
